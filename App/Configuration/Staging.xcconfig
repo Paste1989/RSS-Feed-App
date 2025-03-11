@@ -1,0 +1,17 @@
+//
+//  Staging.xcconfig
+//  RSS Feed App
+//
+//  Created by Saša Brezovac on 11.03.2025..
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+BASE_URL = https:/$()/... //staging url
+PRODUCT_NAME = [S] RSS Feed App
+PRODUCT_BUNDLE_IDENTIFIER = com.paste89.rss-feed-app.staging
+GOOGLE_SERVICE_PLIST_NAME = GoogleService-Stage
+GOOGLE_APP_ID = //add
+ENVIRONMENT = staging
+CURRENT_PROJECT_VERSION = 1
