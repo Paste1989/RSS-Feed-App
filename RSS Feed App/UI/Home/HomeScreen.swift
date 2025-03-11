@@ -11,12 +11,13 @@ struct HomeScreen: View {
     @ObservedObject var viewModel: HomeViewModel
     
     var body: some View {
-        Text("Home VC")
+        Text("Home VC" + "-" + "\(Localizable.news_title.localized)")
             .foregroundColor(AppColors.dark.color)
             .font(Font.heading2)
             .onTapGesture {
                 viewModel.onTapped?()
             }
+            .navigationBarTitle(Localizable.app_name.localized, displayMode: .automatic)
     }
 }
 

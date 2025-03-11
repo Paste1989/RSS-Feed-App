@@ -1,0 +1,12 @@
+/* 
+  Localizable.strings
+  RSS Feed App
+
+  Created by Saša Brezovac on 11.03.2025..
+  
+*/
+
+"app_name" = "RSS Feed App";
+"home_tab_title" = "Home";
+"favorites_tab_title" = "Favorites";
+"news_title" = "News";

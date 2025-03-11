@@ -24,7 +24,6 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>MaisonNeue-Demi.ttf</string>
-		<string>Tiempos-Regular.ttf</string>
 		<string>TestTiemposFine-Regular.otf</string>
 	</array>
 </dict>

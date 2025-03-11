@@ -22,7 +22,7 @@ class HomeCoordinator: Coordinator {
             _ = self?.createFavoritesScreen()
         }
         let vc = UIHostingController(rootView: HomeScreen(viewModel: vm))
-        vc.setupTab(title: "Home", image: "house", selectedImage: "house.fill")
+        vc.setupTab(title: Localizable.home_tab_title.localized, image: "house", selectedImage: "house.fill")
         navigationController.pushViewController(vc, animated: false)
         return navigationController
     }

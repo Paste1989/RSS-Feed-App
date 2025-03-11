@@ -15,7 +15,7 @@ class FavoritesCoordinator: Coordinator {
     func start() -> UIViewController {
         let vm = FavoritesViewModel()
         let vc = UIHostingController(rootView: FavoritesScreen(viewModel: vm))
-        vc.setupTab(title: "Favorites", image: "heart", selectedImage: "heart.fill")
+        vc.setupTab(title: Localizable.favorites_tab_title.localized, image: "heart", selectedImage: "heart.fill")
         self.navigationController.pushViewController(vc, animated: false)
         return vc
     }
