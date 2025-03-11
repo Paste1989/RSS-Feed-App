@@ -6,15 +6,6 @@
 	objectVersion = 77;
 	objects = {
 
-/* Begin PBXBuildFile section */
-		B76FF8BB2D8035D600FE7511 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B76FF8BA2D8035D600FE7511 /* AppDelegate.swift */; };
-		B76FF8BD2D8035D600FE7511 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B76FF8BC2D8035D600FE7511 /* SceneDelegate.swift */; };
-		B76FF9032D803A8700FE7511 /* Development.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = B76FF9022D803A8700FE7511 /* Development.xcconfig */; };
-		B76FF9052D803A9A00FE7511 /* Staging.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = B76FF9042D803A9A00FE7511 /* Staging.xcconfig */; };
-		B76FF9072D803AAF00FE7511 /* Production.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = B76FF9062D803AAF00FE7511 /* Production.xcconfig */; };
-		B76FF90B2D803C1000FE7511 /* AppConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = B76FF90A2D803C1000FE7511 /* AppConfiguration.swift */; };
-/* End PBXBuildFile section */
-
 /* Begin PBXContainerItemProxy section */
 		B76FF8D12D8035D900FE7511 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -34,14 +25,8 @@
 
 /* Begin PBXFileReference section */
 		B76FF8B72D8035D500FE7511 /* [D] RSS Feed App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "[D] RSS Feed App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B76FF8BA2D8035D600FE7511 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		B76FF8BC2D8035D600FE7511 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		B76FF8D02D8035D900FE7511 /* RSS Feed AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "RSS Feed AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B76FF8DA2D8035D900FE7511 /* RSS Feed AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "RSS Feed AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B76FF9022D803A8700FE7511 /* Development.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Development.xcconfig; sourceTree = "<group>"; };
-		B76FF9042D803A9A00FE7511 /* Staging.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Staging.xcconfig; sourceTree = "<group>"; };
-		B76FF9062D803AAF00FE7511 /* Production.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Production.xcconfig; sourceTree = "<group>"; };
-		B76FF90A2D803C1000FE7511 /* AppConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfiguration.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -103,7 +88,6 @@
 		B76FF8AE2D8035D500FE7511 = {
 			isa = PBXGroup;
 			children = (
-				B76FF9092D803ADA00FE7511 /* App */,
 				B76FF8B92D8035D600FE7511 /* RSS Feed App */,
 				B76FF8D32D8035D900FE7511 /* RSS Feed AppTests */,
 				B76FF8DD2D8035D900FE7511 /* RSS Feed AppUITests */,
@@ -119,27 +103,6 @@
 				B76FF8DA2D8035D900FE7511 /* RSS Feed AppUITests.xctest */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		B76FF9082D803AC600FE7511 /* Configuration */ = {
-			isa = PBXGroup;
-			children = (
-				B76FF90A2D803C1000FE7511 /* AppConfiguration.swift */,
-				B76FF9022D803A8700FE7511 /* Development.xcconfig */,
-				B76FF9042D803A9A00FE7511 /* Staging.xcconfig */,
-				B76FF9062D803AAF00FE7511 /* Production.xcconfig */,
-			);
-			path = Configuration;
-			sourceTree = "<group>";
-		};
-		B76FF9092D803ADA00FE7511 /* App */ = {
-			isa = PBXGroup;
-			children = (
-				B76FF8BA2D8035D600FE7511 /* AppDelegate.swift */,
-				B76FF8BC2D8035D600FE7511 /* SceneDelegate.swift */,
-				B76FF9082D803AC600FE7511 /* Configuration */,
-			);
-			path = App;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -262,9 +225,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B76FF9032D803A8700FE7511 /* Development.xcconfig in Resources */,
-				B76FF9052D803A9A00FE7511 /* Staging.xcconfig in Resources */,
-				B76FF9072D803AAF00FE7511 /* Production.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -289,9 +249,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B76FF90B2D803C1000FE7511 /* AppConfiguration.swift in Sources */,
-				B76FF8BB2D8035D600FE7511 /* AppDelegate.swift in Sources */,
-				B76FF8BD2D8035D600FE7511 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -327,7 +284,6 @@
 /* Begin XCBuildConfiguration section */
 		B76FF8E42D8035D900FE7511 /* Debug Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B76FF9022D803A8700FE7511 /* Development.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -357,7 +313,6 @@
 		};
 		B76FF8E52D8035D900FE7511 /* Release Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B76FF9022D803A8700FE7511 /* Development.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -387,7 +342,6 @@
 		};
 		B76FF8E62D8035D900FE7511 /* Debug Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B76FF9022D803A8700FE7511 /* Development.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -451,7 +405,6 @@
 		};
 		B76FF8E72D8035D900FE7511 /* Release Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B76FF9022D803A8700FE7511 /* Development.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -508,7 +461,6 @@
 		};
 		B76FF8E92D8035D900FE7511 /* Debug Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B76FF9022D803A8700FE7511 /* Development.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -528,7 +480,6 @@
 		};
 		B76FF8EA2D8035D900FE7511 /* Release Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B76FF9022D803A8700FE7511 /* Development.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -548,7 +499,6 @@
 		};
 		B76FF8EC2D8035D900FE7511 /* Debug Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B76FF9022D803A8700FE7511 /* Development.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -566,7 +516,6 @@
 		};
 		B76FF8ED2D8035D900FE7511 /* Release Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B76FF9022D803A8700FE7511 /* Development.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -584,7 +533,6 @@
 		};
 		B76FF8EE2D8039DA00FE7511 /* Debug Staging */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B76FF9042D803A9A00FE7511 /* Staging.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -648,7 +596,6 @@
 		};
 		B76FF8EF2D8039DA00FE7511 /* Debug Staging */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B76FF9042D803A9A00FE7511 /* Staging.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -678,7 +625,6 @@
 		};
 		B76FF8F02D8039DA00FE7511 /* Debug Staging */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B76FF9042D803A9A00FE7511 /* Staging.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -698,7 +644,6 @@
 		};
 		B76FF8F12D8039DA00FE7511 /* Debug Staging */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B76FF9042D803A9A00FE7511 /* Staging.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -716,7 +661,6 @@
 		};
 		B76FF8F62D8039FE00FE7511 /* Debug Production */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B76FF9062D803AAF00FE7511 /* Production.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -780,7 +724,6 @@
 		};
 		B76FF8F72D8039FE00FE7511 /* Debug Production */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B76FF9062D803AAF00FE7511 /* Production.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -810,7 +753,6 @@
 		};
 		B76FF8F82D8039FE00FE7511 /* Debug Production */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B76FF9062D803AAF00FE7511 /* Production.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -830,7 +772,6 @@
 		};
 		B76FF8F92D8039FE00FE7511 /* Debug Production */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B76FF9062D803AAF00FE7511 /* Production.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -848,7 +789,6 @@
 		};
 		B76FF8FA2D803A1E00FE7511 /* Release Staging */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B76FF9042D803A9A00FE7511 /* Staging.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -905,7 +845,6 @@
 		};
 		B76FF8FB2D803A1E00FE7511 /* Release Staging */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B76FF9042D803A9A00FE7511 /* Staging.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -935,7 +874,6 @@
 		};
 		B76FF8FC2D803A1E00FE7511 /* Release Staging */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B76FF9042D803A9A00FE7511 /* Staging.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -955,7 +893,6 @@
 		};
 		B76FF8FD2D803A1E00FE7511 /* Release Staging */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B76FF9042D803A9A00FE7511 /* Staging.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -973,7 +910,6 @@
 		};
 		B76FF8FE2D803A2600FE7511 /* Release Production */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B76FF9062D803AAF00FE7511 /* Production.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -1030,7 +966,6 @@
 		};
 		B76FF8FF2D803A2600FE7511 /* Release Production */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B76FF9062D803AAF00FE7511 /* Production.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1060,7 +995,6 @@
 		};
 		B76FF9002D803A2600FE7511 /* Release Production */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B76FF9062D803AAF00FE7511 /* Production.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -1080,7 +1014,6 @@
 		};
 		B76FF9012D803A2600FE7511 /* Release Production */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B76FF9062D803AAF00FE7511 /* Production.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
