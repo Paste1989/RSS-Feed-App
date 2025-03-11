@@ -12,6 +12,8 @@ struct FavoritesScreen: View {
     
     var body: some View {
         Text("Favorites VC")
+            .foregroundColor(AppColors.dark.color)
+            .font(Font.heading2)
     }
 }
 

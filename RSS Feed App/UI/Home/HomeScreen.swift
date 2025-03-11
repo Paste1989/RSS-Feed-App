@@ -12,7 +12,8 @@ struct HomeScreen: View {
     
     var body: some View {
         Text("Home VC")
-            .foregroundColor(AppColors.primary.color)
+            .foregroundColor(AppColors.dark.color)
+            .font(Font.heading2)
             .onTapGesture {
                 viewModel.onTapped?()
             }

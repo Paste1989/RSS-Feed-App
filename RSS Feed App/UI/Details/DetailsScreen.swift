@@ -12,6 +12,8 @@ struct DetailsScreen: View {
     
     var body: some View {
         Text("Details VC")
+            .foregroundColor(AppColors.dark.color)
+            .font(Font.heading2)
     }
 }
 

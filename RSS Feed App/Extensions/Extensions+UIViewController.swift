@@ -10,6 +10,6 @@ import UIKit
 
 extension UIViewController {
     func setupTab(title: String, image: String, selectedImage: String) {
-        self.tabBarItem = UITabBarItem(title: title, image: UIImage(systemName: image)?.withRenderingMode(.alwaysOriginal).withTintColor(UIColor.darkGray), selectedImage: UIImage(systemName: selectedImage)?.withRenderingMode(.alwaysOriginal).withTintColor(UIColor.darkText))
+        self.tabBarItem = UITabBarItem(title: title, image: UIImage(systemName: image)?.withRenderingMode(.alwaysOriginal).withTintColor(UIColor(AppColors.darkGrey.color)), selectedImage: UIImage(systemName: selectedImage)?.withRenderingMode(.alwaysOriginal).withTintColor(UIColor(AppColors.dark.color)))
     }
 }
