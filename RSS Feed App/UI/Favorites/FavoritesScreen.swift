@@ -11,9 +11,13 @@ struct FavoritesScreen: View {
     @ObservedObject var viewModel: FavoritesViewModel
     
     var body: some View {
-        Text("Favorites VC")
-            .foregroundColor(AppColors.dark.color)
-            .font(Font.heading2)
+        ZStack {
+            AppColors.lightGrey.color.edgesIgnoringSafeArea(.all)
+            
+            Text(Localizable.favorites_tab_title.localized)
+                .foregroundColor(AppColors.dark.color)
+                .font(Font.heading2)
+        }
     }
 }
 

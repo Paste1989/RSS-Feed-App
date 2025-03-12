@@ -7,7 +7,8 @@
 
 import Foundation
 
-enum State {
+enum FetchState {
+    case none
     case success
     case error
     case loading
@@ -18,28 +19,29 @@ class HomeViewModel: ObservableObject {
     init(rssService: RSSServiceProtocol) {
         self.rssService = rssService
     }
-    @Published var state: State = .loading
+    @Published var state: FetchState = .none
     @Published var fetched: Bool = false
     @Published var channelTitle: String = ""
-    @Published var rssItems: [RSSFeedItem] = []
+    @Published var channelURL: String = ""
+    @Published var rssFeedItems: [RSSFeedItem] = []
     @Published var rssChannels: [RSSChannel] = []
-    var onChannelTapped: ((RSSChannel) -> Void)?
     
     func fetchRSSChannels() {
         state = .loading
         Task {
             do {
-                let channels = try await rssService.fetchRSSChannels(from: "https://rss.feedspot.com/world_news_rss_feeds/")
+                let channels = try await rssService.fetchRSSChannels()
                 DispatchQueue.main.async { [weak self] in
                     self?.rssChannels = channels
                     self?.state = .success
                     self?.fetched = true
-                    
                 }
                 //print("Found RSS Channels")
             }
             catch {
-                self.state = .error
+                DispatchQueue.main.async { [weak self] in
+                    self?.state = .error
+                }
                 print("Error: \(error)")
             }
         }
@@ -51,15 +53,37 @@ class HomeViewModel: ObservableObject {
             do {
                 let items = try await rssService.fetchRSSFeed(url: channel.link)
                 DispatchQueue.main.async { [weak self] in
-                    self?.rssItems = items
+                    self?.rssFeedItems = items
                     self?.channelTitle = channel.name
+                    self?.channelURL = channel.link
                     self?.state = .success
-                    //print("RSS ITEMS: \(String(describing: self?.rssItems))")
+                    //print("RSS ITEMS: \(String(describing: self?.rssFeedItems))")
                 }
                 
             }
             catch {
-                state = .error
+                DispatchQueue.main.async { [weak self] in
+                    self?.state = .error
+                }
+                print("Failed to fetch or parse RSS feed: \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    func fetchFeed(with url: String) {
+        state = .loading
+        Task {
+            do {
+                let items = try await rssService.fetchRSSFeed(url: url)
+                DispatchQueue.main.async { [weak self] in
+                    self?.rssFeedItems = items
+                    self?.state = .success
+                }
+            }
+            catch {
+                DispatchQueue.main.async { [weak self] in
+                    self?.state = .error
+                }
                 print("Failed to fetch or parse RSS feed: \(error.localizedDescription)")
             }
         }

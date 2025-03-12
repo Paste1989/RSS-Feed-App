@@ -7,29 +7,30 @@
 
 import Foundation
 
-enum PasrseError: String {
+enum ParseError: String {
     case invalidURL = "Invalid URL"
 }
 
 protocol RSSServiceProtocol {
-    func fetchRSSChannels(from url: String) async throws -> [RSSChannel]
+    func fetchRSSChannels() async throws -> [RSSChannel]
     func fetchRSSFeed(url: String) async throws -> [RSSFeedItem]
 }
 
 class RSSService: NSObject, RSSServiceProtocol, XMLParserDelegate {
-    let rssPasrerService = ServiceFactory.rssParserService
+    private let channelsURL: String = "https://rss.feedspot.com/world_news_rss_feeds/"
+    private let rssParserService = ServiceFactory.rssParserService
     private var items: [RSSFeedItem] = []
-    private var currentElement = ""
-    private var currentTitle = ""
-    private var currentLink = ""
-    private var currentImage = ""
-    private var currentDescription = ""
+    private var currentElement: String = ""
+    private var currentTitle: String = ""
+    private var currentLink: String = ""
+    private var currentImage: String = ""
+    private var currentDescription: String = ""
 }
 
 //MARK: - RSS Channels
 extension RSSService {
-    func fetchRSSChannels(from url: String) async throws -> [RSSChannel] {
-        guard let url = URL(string: url) else { throw URLError(.badURL) }
+    func fetchRSSChannels() async throws -> [RSSChannel] {
+        guard let url = URL(string: channelsURL) else { throw URLError(.badURL) }
         
         let (data, _) = try await URLSession.shared.data(from: url)
         guard let html = String(data: data, encoding: .utf8) else {
@@ -79,7 +80,7 @@ extension RSSService {
 extension RSSService {
     func fetchRSSFeed(url: String) async throws -> [RSSFeedItem] {
         guard let feedURL = URL(string: url) else {
-            throw NSError(domain: PasrseError.invalidURL.rawValue, code: 400, userInfo: nil)
+            throw NSError(domain: ParseError.invalidURL.rawValue, code: 400, userInfo: nil)
         }
         
         let (data, _) = try await URLSession.shared.data(from: feedURL)

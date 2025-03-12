@@ -16,7 +16,7 @@ struct DetailsScreen: View {
             
             ScrollView(showsIndicators: false) {
                 LazyVStack(alignment: .leading, spacing: 10) {
-                    ForEach(viewModel.rssItems) { feedItem in
+                    ForEach(viewModel.rssFeedItems) { feedItem in
                         
                         HStack(spacing: 0) {
                             AsyncImage(url: URL(string: feedItem.image ?? "")) { phase in

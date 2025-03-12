@@ -7,6 +7,12 @@
 */
 
 "app_name" = "RSS Feed App";
-"home_tab_title" = "Home";
+"home_tab_title" = "Feed";
 "favorites_tab_title" = "Favorites";
 "news_title" = "News";
+"channels_btn_title" = "Channels";
+"error_enter_valid_url" = "Please enter valid RSS URL.";
+"enter_url_placeholder" = "Enter URL";
+"loading_state_title" = "Loading...";
+"rss_chanells_title" = "RSS Channels";
+"read_more_title" = "Read more...";

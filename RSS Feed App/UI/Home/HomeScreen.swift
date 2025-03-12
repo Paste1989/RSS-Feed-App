@@ -10,87 +10,147 @@ import UIKit
 
 struct HomeScreen: View {
     @ObservedObject var viewModel: HomeViewModel
-
+    @State var inputText: String = ""
+    @State var rssChanelsScreenShown: Bool = false
+    
     var body: some View {
         ZStack{
             AppColors.lightGrey.color.edgesIgnoringSafeArea(.all)
             
-            ScrollView(showsIndicators: false) {
-                VStack(spacing: 0) {
+            VStack(spacing: 0) {
+                HStack(spacing: 0) {
+                    TextField(Localizable.enter_url_placeholder.localized, text: $inputText)
+                        .padding()
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .frame(width: UIScreen.main.bounds.width - 50)
                     
-                    Spacer()
-                    
-                    switch viewModel.state {
-                    case .success:
-                        LazyVStack(alignment: .leading, spacing: 12) {
-                            ForEach(viewModel.rssChannels) { channel in
-                                HStack(spacing: 12) {
-                                    AsyncImage(url: URL(string: channel.image ?? "")) { phase in
-                                        switch phase {
-                                        case .empty:
-                                            Image(systemName: "photo")
-                                                .resizable()
-                                                .scaledToFit()
-                                                .frame(width: 55, height: 55)
-                                                .background(Color.gray.opacity(0.3))
-                                                .clipShape(RoundedRectangle(cornerRadius: 10))
-                                        case .success(let image):
-                                            image
-                                                .resizable()
-                                                .scaledToFit()
-                                                .frame(width: 60, height: 60)
-                                                .clipShape(RoundedRectangle(cornerRadius: 10))
-                                        case .failure:
-                                            Image(systemName: "photo")
-                                                .resizable()
-                                                .scaledToFit()
-                                                .frame(width: 55, height: 55)
-                                                .background(Color.gray.opacity(0.3))
-                                                .clipShape(RoundedRectangle(cornerRadius: 10))
-                                        @unknown default:
-                                            ProgressView()
-                                                .frame(width: 60, height: 60)
-                                                .background(Color.gray.opacity(0.3))
-                                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                    Button {
+                        viewModel.fetchFeed(with: inputText)
+                    } label: {
+                        Image(systemName: "arrow.right")
+                            .foregroundColor(AppColors.dark.color)
+                            .font(.bodyXLarge)
+                    }
+                }
+                
+                ScrollView(showsIndicators: false) {
+                    VStack(spacing: 0) {
+                        Text(viewModel.channelTitle)
+                            .foregroundColor(AppColors.dark.color)
+                            .font(.bodyXLarge)
+                            .padding(.vertical, 20)
+                        
+                        switch viewModel.state {
+                        case .success:
+                            LazyVStack(alignment: .leading, spacing: 12) {
+                                ForEach(viewModel.rssFeedItems) { feedItem in
+                                    HStack(spacing: 12) {
+                                        Link(destination: URL(string: feedItem.link)!) {
+                                            AsyncImage(url: URL(string: feedItem.image!)) { phase in
+                                                switch phase {
+                                                case .empty:
+                                                    Image(systemName: "photo")
+                                                        .resizable()
+                                                        .scaledToFit()
+                                                        .frame(width: 60, height: 60)
+                                                        .foregroundColor(AppColors.disabled.color)
+                                                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                                                    
+                                                case .success(let image):
+                                                    image
+                                                        .resizable()
+                                                        .scaledToFill()
+                                                        .frame(width: 60, height: 50)
+                                                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                                                    
+                                                case .failure:
+                                                    Image(systemName: "photo")
+                                                        .resizable()
+                                                        .scaledToFit()
+                                                        .frame(width: 60, height: 60)
+                                                        .foregroundColor(AppColors.disabled.color)
+                                                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                                                    
+                                                @unknown default:
+                                                    ProgressView()
+                                                        .frame(width: 60, height: 60)
+                                                        .background(Color.gray.opacity(0.3))
+                                                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                                                }
+                                            }
+                                            .padding(.horizontal, 15)
+                                            
+                                            
+                                            VStack(alignment: .leading, spacing: 5) {
+                                                Text(feedItem.title)
+                                                    .font(Font.labelLarge)
+                                                    .foregroundColor(.primary)
+                                                    .multilineTextAlignment(.leading)
+                                                
+                                                Text(feedItem.description ?? "")
+                                                    .font(Font.labelMedium)
+                                                    .foregroundColor(.primary)
+                                                    .multilineTextAlignment(.leading)
+                                                
+                                                HStack(spacing: 0) {
+                                                    Spacer()
+                                                    
+                                                    Text(Localizable.read_more_title.localized)
+                                                        .foregroundColor(AppColors.darkGrey.color)
+                                                        .font(Font.labelSmall)
+                                                        .padding(.trailing, 10)
+                                                }
+                                            }
                                         }
                                     }
-                                    .padding(.horizontal, 5)
-                                    
-                                    VStack(alignment: .leading, spacing: 6) {
-                                        Text(channel.name)
-                                            .font(.headline)
-                                            .foregroundColor(.primary)
+                                    .onTapGesture {
+                                        print("tapped ...")
                                     }
+                                    .padding(.vertical, 10)
                                 }
-                                .onTapGesture {
-                                    viewModel.onChannelTapped?(channel)
-                                }
-                                .padding(.vertical, 8)
                             }
+                        case .error:
+                            Text(Localizable.error_enter_valid_url.localized)
+                                .font(.bodySmall)
+                                .foregroundColor(AppColors.error.color)
+                            
+                        default:
+                            EmptyView()
                         }
-                    case .error:
-                        Text("Error occured. Please try again later.")
-                            .font(.bodyXLarge)
-                            .foregroundColor(AppColors.error.color)
                         
-                    case .loading:
-                        ProgressView {
-                            Text("Loading...")
-                                .foregroundColor(AppColors.darkGrey.color)
-                                .bold()
-                        }
+                        Spacer()
                     }
-                    
-                    Spacer()
                 }
             }
-            .padding(.horizontal, 20)
-            .navigationBarTitle(Text("RSS Channels"), displayMode: .automatic)
+            .padding(.horizontal, 10)
             .task {
                 if !viewModel.fetched {
                     viewModel.fetchRSSChannels()
                 }
             }
+            .sheet(isPresented: $rssChanelsScreenShown, onDismiss: {
+                rssChanelsScreenShown = false
+                inputText = viewModel.channelURL
+            }) {
+                RSSChannelsScreen(viewModel: viewModel)
+            }
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text(Localizable.app_name.localized)
+                        .font(.heading2)
+                        .foregroundColor(AppColors.dark.color)
+                }
+            }
+            .navigationBarItems(trailing: HStack {
+                Button(action: {
+                    print("channels tapped")
+                    rssChanelsScreenShown.toggle()
+                }) {
+                    Text(Localizable.channels_btn_title.localized)
+                        .foregroundColor(AppColors.dark.color)
+                        .font(.bodyMedium)
+                }
+            })
         }
     }
 }

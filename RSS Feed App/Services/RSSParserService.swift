@@ -67,13 +67,35 @@ extension RSSParserService {
         if mode == .feed && elementName == "item" {
             currentTitle = ""
             currentLink = ""
-            currentImage = nil
+            currentImage = ""
             currentDescription = ""
         }
         
         if mode == .channel, elementName == "image" || elementName == "media:content" || elementName == "enclosure" {
             channelImage = attributeDict["url"] ?? attributeDict["href"]
         }
+        
+//        if let imageURL = extractImageFromDescription(currentDescription) {
+//            print("Extracted Image URL: \(imageURL)")
+//        } else {
+//            print("No image found in description.")
+//        }
+//        if mode == .feed, elementName == "media:content" || elementName == "media:thumbnail" {
+//            print("AAAAAAAAAAAAAAA")
+//            currentImage = attributeDict["url"]
+//        }
+    }
+    
+    func extractImageFromDescription(_ description: String) -> String? {
+        let pattern = #"<img[^>]*src=\"([^\"]+)\""#  // Regex to capture the 'src' value in <img> tags
+        let regex = try? NSRegularExpression(pattern: pattern, options: .caseInsensitive)
+        
+        if let match = regex?.firstMatch(in: description, range: NSRange(description.startIndex..., in: description)),
+           let range = Range(match.range(at: 1), in: description) {
+            return String(description[range])
+        }
+        
+        return nil
     }
     
     func parser(_ parser: XMLParser, foundCharacters string: String) {
@@ -86,6 +108,7 @@ extension RSSParserService {
             case "link":
                 currentLink += trimmedString
             case "image":
+                print("aaaa: \(trimmedString)")
                 currentImage = trimmedString
             case "description":
                 currentDescription += trimmedString
@@ -93,7 +116,10 @@ extension RSSParserService {
                 currentCategories.append(trimmedString)
             default: break
             }
-        } else if mode == .channel {
+            
+            print("aaaa: \(trimmedString) ------ \(currentImage)")
+        }
+        else if mode == .channel {
             if currentElement == "title", channelTitle.isEmpty {
                 channelTitle += trimmedString
             }
@@ -107,7 +133,6 @@ extension RSSParserService {
         }
     }
     
-    func parserDidEndDocument(_ parser: XMLParser) { }
     
-    func parser(_ parser: XMLParser, parseErrorOccurred parseError: Error) { }
 }
+
