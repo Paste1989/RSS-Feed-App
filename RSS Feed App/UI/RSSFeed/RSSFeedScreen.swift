@@ -43,12 +43,12 @@ struct RSSFeedScreen: View {
                             }
                             .padding(7)
                             .background(AppColors.primary.color)
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
                             .onTapGesture {
                                 viewModel.fetchFeed(for: channel)
                             }
                         }
                         .padding(.horizontal, 5)
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
                     }
                 }
                 .padding(.horizontal, 10)
@@ -128,6 +128,8 @@ struct RSSFeedScreen: View {
                                         print("tapped ...")
                                     }
                                     .padding(.vertical, 10)
+                                    
+                                    Divider()
                                 }
                             }
                         case .error:
@@ -142,7 +144,6 @@ struct RSSFeedScreen: View {
                         Spacer()
                     }
                 }
-                
             }
             .padding(.horizontal, 10)
             .task {

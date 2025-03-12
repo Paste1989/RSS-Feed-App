@@ -86,6 +86,9 @@ struct RSSChannelsScreen: View {
                                         viewModel.fetchFeed(for: channel)
                                         presentationMode.wrappedValue.dismiss()
                                     }
+                                    .padding(.bottom, 5)
+                                    
+                                    Divider()
                                 }
                             }
                         }

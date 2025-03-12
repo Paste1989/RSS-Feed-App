@@ -58,11 +58,11 @@ class RSSFeedViewModel: ObservableObject {
                     self?.channelTitle = channel.name
                     self?.channelURL = channel.link
                     self?.state = .success
-                    //print("RSS ITEMS: \(String(describing: self?.rssFeedItems))")
                     
-                    self?.channels.append(channel)
+                    if let self = self, !self.channels.contains(where: { $0.link == channel.link }) {
+                        self.channels.append(channel)
+                    }
                 }
-                
             }
             catch {
                 DispatchQueue.main.async { [weak self] in
