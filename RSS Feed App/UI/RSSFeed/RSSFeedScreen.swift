@@ -49,7 +49,7 @@ struct RSSFeedScreen: View {
                                             AsyncImage(url: URL(string: feedItem.image!)) { phase in
                                                 switch phase {
                                                 case .empty:
-                                                    Image(systemName: "photo")
+                                                    Image(AppImages.no_image_placeholder_img.image)
                                                         .resizable()
                                                         .scaledToFit()
                                                         .frame(width: 60, height: 60)
@@ -64,7 +64,7 @@ struct RSSFeedScreen: View {
                                                         .clipShape(RoundedRectangle(cornerRadius: 10))
                                                     
                                                 case .failure:
-                                                    Image(systemName: "photo")
+                                                    Image(AppImages.no_image_placeholder_img.image)
                                                         .resizable()
                                                         .scaledToFit()
                                                         .frame(width: 60, height: 60)

@@ -13,7 +13,7 @@ struct RSSChannelsScreen: View {
     
     var body: some View {
         ZStack{
-            AppColors.lightGrey.color.edgesIgnoringSafeArea(.all)
+            AppColors.white.color.edgesIgnoringSafeArea(.all)
             
             VStack(spacing: 0) {
                 HStack(spacing: 0){
@@ -27,7 +27,6 @@ struct RSSChannelsScreen: View {
                             .foregroundColor(AppColors.dark.color)
                             .frame(width: 40, height: 40)      
                     }
-                    .padding(10)
                 }
                 
                 VStack(spacing: 0) {
@@ -39,55 +38,54 @@ struct RSSChannelsScreen: View {
                     
                     switch viewModel.state {
                     case .success:
+                        
                         ScrollView(showsIndicators: false) {
-                            LazyVStack(alignment: .leading, spacing: 12) {
+                            LazyVStack(alignment: .leading, spacing: 10) {
                                 ForEach(viewModel.rssChannels) { channel in
-                                    HStack(spacing: 12) {
+                                    
+                                    ZStack(alignment: .bottomTrailing) {
                                         AsyncImage(url: URL(string: channel.image ?? "")) { phase in
                                             switch phase {
                                             case .empty:
-                                                Image(systemName: "photo")
+                                                Image(AppImages.no_image_placeholder_img.image)
                                                     .resizable()
                                                     .scaledToFit()
-                                                    .frame(width: 60, height: 60)
                                                     .foregroundColor(AppColors.disabled.color)
-                                                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                                                
+
                                             case .success(let image):
                                                 image
                                                     .resizable()
-                                                    .scaledToFill()
-                                                    .frame(width: 60, height: 50)
-                                                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                                                
+                                                    .scaledToFit()
+                                                    .clipped()
+
                                             case .failure:
-                                                Image(systemName: "photo")
+                                                Image(AppImages.no_image_placeholder_img.image)
                                                     .resizable()
                                                     .scaledToFit()
-                                                    .frame(width: 60, height: 60)
                                                     .foregroundColor(AppColors.disabled.color)
-                                                    .clipShape(RoundedRectangle(cornerRadius: 10))
                                                 
                                             @unknown default:
                                                 ProgressView()
-                                                    .frame(width: 60, height: 60)
-                                                    .background(Color.gray.opacity(0.3))
-                                                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                                                    .frame(height: 120)
+                                                    .background(AppColors.disabled.color)
                                             }
                                         }
-                                        .padding(.horizontal, 5)
-                                        
-                                        VStack(alignment: .leading, spacing: 6) {
-                                            Text(channel.name)
-                                                .font(.headline)
-                                                .foregroundColor(.primary)
-                                        }
+                                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+                                        Text(channel.name)
+                                            .frame(maxWidth: 200)
+                                            .font(.bodyXLarge)
+                                            .foregroundColor(AppColors.dark.color)
+                                            .padding(7)
+                                            .background(AppColors.lightGrey.color)
+                                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                                            .offset(x: -10, y: -10)
                                     }
+                                    .frame(maxWidth: .infinity)
                                     .onTapGesture {
                                         viewModel.fetchFeed(for: channel)
                                         presentationMode.wrappedValue.dismiss()
                                     }
-                                    .padding(.vertical, 8)
                                 }
                             }
                         }
