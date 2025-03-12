@@ -33,6 +33,27 @@ struct RSSFeedScreen: View {
                     }
                 }
                 
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 0) {
+                        ForEach(viewModel.channels) { channel in
+                            VStack(spacing: 0) {
+                                Text(channel.name)
+                                    .foregroundColor(AppColors.white.color)
+                                    .font(.bodyLarge)
+                            }
+                            .padding(7)
+                            .background(AppColors.primary.color)
+                            .onTapGesture {
+                                viewModel.fetchFeed(for: channel)
+                            }
+                        }
+                        .padding(.horizontal, 5)
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                    }
+                }
+                .padding(.horizontal, 10)
+                .padding(.bottom, 15)
+                
                 ScrollView(showsIndicators: false) {
                     VStack(spacing: 0) {
                         Text(viewModel.channelTitle)
@@ -121,6 +142,7 @@ struct RSSFeedScreen: View {
                         Spacer()
                     }
                 }
+                
             }
             .padding(.horizontal, 10)
             .task {

@@ -25,6 +25,7 @@ class RSSFeedViewModel: ObservableObject {
     @Published var channelURL: String = ""
     @Published var rssFeedItems: [RSSFeedItem] = []
     @Published var rssChannels: [RSSChannel] = []
+    @Published var channels: [RSSChannel] = []
     
     func fetchRSSChannels() {
         state = .loading
@@ -58,6 +59,8 @@ class RSSFeedViewModel: ObservableObject {
                     self?.channelURL = channel.link
                     self?.state = .success
                     //print("RSS ITEMS: \(String(describing: self?.rssFeedItems))")
+                    
+                    self?.channels.append(channel)
                 }
                 
             }
