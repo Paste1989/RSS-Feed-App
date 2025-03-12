@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct RSSChannelsScreen: View {
-    @ObservedObject var viewModel: HomeViewModel
+    @ObservedObject var viewModel: RSSFeedViewModel
     @Environment(\.presentationMode) var presentationMode
     
     var body: some View {

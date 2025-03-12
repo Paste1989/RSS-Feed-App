@@ -28,7 +28,7 @@ final class RootCoordinator: Coordinator {
     }
     
     private func createTabbarController() -> UIViewController {
-        let homeCoordinator = HomeCoordinator()
+        let homeCoordinator = RSSFeedCoordinator()
         let favoritesCoordinator = FavoritesCoordinator()
         
         childCoordinators = [

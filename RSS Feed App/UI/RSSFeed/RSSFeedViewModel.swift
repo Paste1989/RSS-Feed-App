@@ -14,7 +14,7 @@ enum FetchState {
     case loading
 }
 
-class HomeViewModel: ObservableObject {
+class RSSFeedViewModel: ObservableObject {
     private var rssService: RSSServiceProtocol
     init(rssService: RSSServiceProtocol) {
         self.rssService = rssService
@@ -77,6 +77,7 @@ class HomeViewModel: ObservableObject {
                 let items = try await rssService.fetchRSSFeed(url: url)
                 DispatchQueue.main.async { [weak self] in
                     self?.rssFeedItems = items
+                    self?.channelTitle = Localizable.news_title.localized
                     self?.state = .success
                 }
             }

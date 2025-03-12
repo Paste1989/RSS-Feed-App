@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import SwiftUI
 
-class HomeCoordinator: Coordinator {
+class RSSFeedCoordinator: Coordinator {
     private let navigationController: UINavigationController = UINavigationController()
 
     func start() -> UIViewController {
@@ -17,8 +17,8 @@ class HomeCoordinator: Coordinator {
     }
     
     private func createHomeScreen() -> UIViewController {
-        let vm = HomeViewModel(rssService: ServiceFactory.rssService)
-        let vc = UIHostingController(rootView: HomeScreen(viewModel: vm))
+        let vm = RSSFeedViewModel(rssService: ServiceFactory.rssService)
+        let vc = UIHostingController(rootView: RSSFeedScreen(viewModel: vm))
         vc.setupTab(title: Localizable.home_tab_title.localized, image: "newspaper", selectedImage: "newspaper.fill")
         navigationController.pushViewController(vc, animated: false)
         return navigationController

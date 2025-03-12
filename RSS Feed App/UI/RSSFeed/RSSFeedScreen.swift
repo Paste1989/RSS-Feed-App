@@ -8,8 +8,8 @@
 import SwiftUI
 import UIKit
 
-struct HomeScreen: View {
-    @ObservedObject var viewModel: HomeViewModel
+struct RSSFeedScreen: View {
+    @ObservedObject var viewModel: RSSFeedViewModel
     @State var inputText: String = ""
     @State var rssChanelsScreenShown: Bool = false
     
@@ -84,12 +84,12 @@ struct HomeScreen: View {
                                             VStack(alignment: .leading, spacing: 5) {
                                                 Text(feedItem.title)
                                                     .font(Font.labelLarge)
-                                                    .foregroundColor(.primary)
+                                                    .foregroundColor(AppColors.dark.color)
                                                     .multilineTextAlignment(.leading)
                                                 
                                                 Text(feedItem.description ?? "")
                                                     .font(Font.labelMedium)
-                                                    .foregroundColor(.primary)
+                                                    .foregroundColor(AppColors.darkGrey.color)
                                                     .multilineTextAlignment(.leading)
                                                 
                                                 HStack(spacing: 0) {
