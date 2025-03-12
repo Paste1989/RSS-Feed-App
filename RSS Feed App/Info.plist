@@ -26,5 +26,10 @@
 		<string>MaisonNeue-Demi.ttf</string>
 		<string>TestTiemposFine-Regular.otf</string>
 	</array>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 </dict>
 </plist>

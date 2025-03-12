@@ -42,7 +42,6 @@ final class RootCoordinator: Coordinator {
         tabbarController.viewControllers = childCoordinators.map { coordinator in
             return coordinator.start()
         }
-        print("createTabbarController in startSplahScreen method")
  
         return tabbarController
     }
