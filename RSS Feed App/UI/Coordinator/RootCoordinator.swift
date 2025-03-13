@@ -36,9 +36,9 @@ final class RootCoordinator: Coordinator {
             favoritesCoordinator
         ]
         
-        tabbarController.tabBar.tintColor = UIColor.gray
-        tabbarController.tabBar.backgroundColor = UIColor.white
-        tabbarController.tabBar.unselectedItemTintColor = UIColor.darkGray
+        tabbarController.tabBar.tintColor = UIColor(AppColors.darkGrey.color)
+        tabbarController.tabBar.backgroundColor = UIColor(AppColors.white.color)
+        tabbarController.tabBar.unselectedItemTintColor = UIColor(AppColors.disabled.color)
         tabbarController.viewControllers = childCoordinators.map { coordinator in
             return coordinator.start()
         }

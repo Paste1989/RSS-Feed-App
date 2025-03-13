@@ -37,7 +37,7 @@ struct RSSChannelsScreen: View {
                     Spacer()
                     
                     switch viewModel.state {
-                    case .success(let type):
+                    case .success:
                         ChannelDataView(viewModel: viewModel)
                         
                     case .error(let type):
@@ -51,13 +51,14 @@ struct RSSChannelsScreen: View {
                             ChannelDataView(viewModel: viewModel)
                         }
                         
-                    case .loading(let type):
+                    case .loading:
                             ProgressView {
                                 Text(Localizable.loading_state_title.localized)
                                     .font(.bodyLarge)
                                     .foregroundColor(AppColors.darkGrey.color)
                                     .bold()
                             }
+                            .tint(AppColors.dark.color)
                             .foregroundColor(AppColors.dark.color)
                         
                     case .none:

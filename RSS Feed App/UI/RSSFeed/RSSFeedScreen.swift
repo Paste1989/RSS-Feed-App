@@ -23,6 +23,7 @@ struct RSSFeedScreen: View {
                         .padding()
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .frame(width: UIScreen.main.bounds.width - 50)
+                        .foregroundColor(AppColors.white.color)
                     
                     Button {
                         viewModel.fetchFeed(with: inputText)
