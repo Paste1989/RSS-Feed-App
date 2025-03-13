@@ -9,9 +9,14 @@ import Foundation
 
 enum FetchState {
     case none
-    case success
-    case error
-    case loading
+    case success(type: ContentType)
+    case error(type: ContentType)
+    case loading(type: ContentType)
+
+    enum ContentType {
+        case channel
+        case feed
+    }
 }
 
 class RSSFeedViewModel: ObservableObject {
@@ -21,6 +26,7 @@ class RSSFeedViewModel: ObservableObject {
     }
     @Published var state: FetchState = .none
     @Published var fetched: Bool = false
+    @Published var currentChannel: RSSChannel?
     @Published var channelTitle: String = ""
     @Published var channelURL: String = ""
     @Published var rssFeedItems: [RSSFeedItem] = []
@@ -28,20 +34,20 @@ class RSSFeedViewModel: ObservableObject {
     @Published var channels: [RSSChannel] = []
     
     func fetchRSSChannels() {
-        state = .loading
+        state = .loading(type: .channel)
         Task {
             do {
                 let channels = try await rssService.fetchRSSChannels()
                 DispatchQueue.main.async { [weak self] in
                     self?.rssChannels = channels
-                    self?.state = .success
+                    self?.state = .success(type: .channel)
                     self?.fetched = true
                 }
                 //print("Found RSS Channels")
             }
             catch {
                 DispatchQueue.main.async { [weak self] in
-                    self?.state = .error
+                    self?.state = .error(type: .channel)
                 }
                 print("Error: \(error)")
             }
@@ -49,15 +55,17 @@ class RSSFeedViewModel: ObservableObject {
     }
     
     func fetchFeed(for channel: RSSChannel) {
-        state = .loading
+        state = .loading(type: .feed)
         Task {
             do {
                 let items = try await rssService.fetchRSSFeed(url: channel.link)
                 DispatchQueue.main.async { [weak self] in
+                    self?.currentChannel = channel
                     self?.rssFeedItems = items
-                    self?.channelTitle = channel.name
-                    self?.channelURL = channel.link
-                    self?.state = .success
+                    self?.channelTitle = self?.currentChannel?.name ?? ""
+                    self?.channelURL = self?.currentChannel?.link ?? ""
+                    self?.state = .success(type: .feed)
+                    
                     
                     if let self = self, !self.channels.contains(where: { $0.link == channel.link }) {
                         self.channels.append(channel)
@@ -66,7 +74,7 @@ class RSSFeedViewModel: ObservableObject {
             }
             catch {
                 DispatchQueue.main.async { [weak self] in
-                    self?.state = .error
+                    self?.state = .error(type: .feed)
                 }
                 print("Failed to fetch or parse RSS feed: \(error.localizedDescription)")
             }
@@ -74,19 +82,20 @@ class RSSFeedViewModel: ObservableObject {
     }
     
     func fetchFeed(with url: String) {
-        state = .loading
+        state = .loading(type: .feed)
         Task {
             do {
                 let items = try await rssService.fetchRSSFeed(url: url)
                 DispatchQueue.main.async { [weak self] in
                     self?.rssFeedItems = items
-                    self?.channelTitle = Localizable.news_title.localized
-                    self?.state = .success
+                    self?.channelTitle = self?.channelTitle ?? Localizable.news_title.localized
+                    self?.channelURL = url
+                    self?.state = .success(type: .feed)
                 }
             }
             catch {
                 DispatchQueue.main.async { [weak self] in
-                    self?.state = .error
+                    self?.state = .error(type: .feed)
                 }
                 print("Failed to fetch or parse RSS feed: \(error.localizedDescription)")
             }

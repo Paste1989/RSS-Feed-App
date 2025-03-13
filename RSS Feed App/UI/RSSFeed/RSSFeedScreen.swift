@@ -38,14 +38,15 @@ struct RSSFeedScreen: View {
                         ForEach(viewModel.channels) { channel in
                             VStack(spacing: 0) {
                                 Text(channel.name)
-                                    .foregroundColor(AppColors.white.color)
+                                    .foregroundColor(viewModel.currentChannel == channel ? AppColors.white.color : AppColors.dark.color)
                                     .font(.bodyLarge)
                             }
                             .padding(7)
-                            .background(AppColors.primary.color)
+                            .background(viewModel.currentChannel == channel ? AppColors.primary.color : AppColors.white.color)
                             .clipShape(RoundedRectangle(cornerRadius: 10))
                             .onTapGesture {
                                 viewModel.fetchFeed(for: channel)
+                                inputText = channel.link
                             }
                         }
                         .padding(.horizontal, 5)
@@ -137,9 +138,9 @@ struct RSSFeedScreen: View {
                                 .font(.bodySmall)
                                 .foregroundColor(AppColors.error.color)
                             
-                        default:
-                            EmptyView()
-                        }
+                    default:
+                        EmptyView()
+                    }
                         
                         Spacer()
                     }

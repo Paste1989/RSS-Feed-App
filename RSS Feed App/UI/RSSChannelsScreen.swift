@@ -37,75 +37,28 @@ struct RSSChannelsScreen: View {
                     Spacer()
                     
                     switch viewModel.state {
-                    case .success:
+                    case .success(let type):
+                        ChannelDataView(viewModel: viewModel)
                         
-                        ScrollView(showsIndicators: false) {
-                            LazyVStack(alignment: .leading, spacing: 10) {
-                                ForEach(viewModel.rssChannels) { channel in
-                                    
-                                    ZStack(alignment: .bottomTrailing) {
-                                        AsyncImage(url: URL(string: channel.image ?? "")) { phase in
-                                            switch phase {
-                                            case .empty:
-                                                Image(AppImages.no_image_placeholder_img.image)
-                                                    .resizable()
-                                                    .scaledToFit()
-                                                    .foregroundColor(AppColors.disabled.color)
-
-                                            case .success(let image):
-                                                image
-                                                    .resizable()
-                                                    .scaledToFit()
-                                                    .clipped()
-
-                                            case .failure:
-                                                Image(AppImages.no_image_placeholder_img.image)
-                                                    .resizable()
-                                                    .scaledToFit()
-                                                    .foregroundColor(AppColors.disabled.color)
-                                                
-                                            @unknown default:
-                                                ProgressView()
-                                                    .frame(height: 120)
-                                                    .background(AppColors.disabled.color)
-                                            }
-                                        }
-                                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-
-                                        Text(channel.name)
-                                            .frame(maxWidth: 200)
-                                            .font(.bodyXLarge)
-                                            .foregroundColor(AppColors.dark.color)
-                                            .padding(7)
-                                            .background(AppColors.lightGrey.color)
-                                            .clipShape(RoundedRectangle(cornerRadius: 10))
-                                            .offset(x: -10, y: -10)
-                                    }
-                                    .frame(maxWidth: .infinity)
-                                    .onTapGesture {
-                                        viewModel.fetchFeed(for: channel)
-                                        presentationMode.wrappedValue.dismiss()
-                                    }
-                                    .padding(.bottom, 5)
-                                    
-                                    Divider()
-                                }
+                    case .error(let type):
+                        switch type {
+                        case .channel:
+                            Text(Localizable.error_enter_valid_url.localized)
+                                .font(.bodyXLarge)
+                                .foregroundColor(AppColors.error.color)
+                            
+                        case .feed:
+                            ChannelDataView(viewModel: viewModel)
+                        }
+                        
+                    case .loading(let type):
+                            ProgressView {
+                                Text(Localizable.loading_state_title.localized)
+                                    .font(.bodyLarge)
+                                    .foregroundColor(AppColors.darkGrey.color)
+                                    .bold()
                             }
-                        }
-                        
-                    case .error:
-                        Text(Localizable.error_enter_valid_url.localized)
-                            .font(.bodyXLarge)
-                            .foregroundColor(AppColors.error.color)
-                        
-                    case .loading:
-                        ProgressView {
-                            Text(Localizable.loading_state_title.localized)
-                                .font(.bodyLarge)
-                                .foregroundColor(AppColors.darkGrey.color)
-                                .bold()
-                        }
-                        .foregroundColor(AppColors.dark.color)
+                            .foregroundColor(AppColors.dark.color)
                         
                     case .none:
                         EmptyView()
@@ -126,4 +79,70 @@ struct RSSChannelsScreen: View {
 
 #Preview {
     RSSChannelsScreen(viewModel: .init(rssService: ServiceFactory.rssService))
+}
+
+
+
+struct ChannelDataView: View {
+    @Environment(\.presentationMode) var presentationMode
+    var viewModel: RSSFeedViewModel
+    init(viewModel: RSSFeedViewModel) {
+        self.viewModel = viewModel
+    }
+    var body: some View {
+        ScrollView(showsIndicators: false) {
+                                        LazyVStack(alignment: .leading, spacing: 10) {
+                                            ForEach(viewModel.rssChannels) { channel in
+                                                
+                                                ZStack(alignment: .bottomTrailing) {
+                                                    AsyncImage(url: URL(string: channel.image ?? "")) { phase in
+                                                        switch phase {
+                                                        case .empty:
+                                                            Image(AppImages.no_image_placeholder_img.image)
+                                                                .resizable()
+                                                                .scaledToFit()
+                                                                .foregroundColor(AppColors.disabled.color)
+                                                            
+                                                        case .success(let image):
+                                                            image
+                                                                .resizable()
+                                                                .scaledToFit()
+                                                                .clipped()
+                                                            
+                                                        case .failure:
+                                                            Image(AppImages.no_image_placeholder_img.image)
+                                                                .resizable()
+                                                                .scaledToFit()
+                                                                .foregroundColor(AppColors.disabled.color)
+                                                            
+                                                        @unknown default:
+                                                            ProgressView()
+                                                                .frame(height: 120)
+                                                                .background(AppColors.disabled.color)
+                                                        }
+                                                    }
+                                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                                    
+                                                    Text(channel.name)
+                                                        .frame(maxWidth: 200)
+                                                        .font(.bodyXLarge)
+                                                        .foregroundColor(AppColors.dark.color)
+                                                        .padding(7)
+                                                        .background(AppColors.lightGrey.color)
+                                                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                                                        .offset(x: -10, y: -10)
+                                                }
+                                                .frame(maxWidth: .infinity)
+                                                .onTapGesture {
+                                                    viewModel.fetchFeed(for: channel)
+                                                    presentationMode.wrappedValue.dismiss()
+                                                }
+                                                .padding(.bottom, 5)
+                                                
+                                                Divider()
+                                            }
+                                        }
+                                    }
+
+    }
 }
