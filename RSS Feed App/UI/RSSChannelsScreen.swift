@@ -10,6 +10,7 @@ import SwiftUI
 struct RSSChannelsScreen: View {
     @ObservedObject var viewModel: RSSFeedViewModel
     @Environment(\.presentationMode) var presentationMode
+    @State var isShown: Bool = false
     
     var body: some View {
         ZStack{
@@ -25,7 +26,7 @@ struct RSSChannelsScreen: View {
                         Image(systemName: "xmark.circle")
                             .font(.bodyXLarge)
                             .foregroundColor(AppColors.dark.color)
-                            .frame(width: 40, height: 40)      
+                            .frame(width: 40, height: 40)
                     }
                 }
                 
@@ -43,23 +44,32 @@ struct RSSChannelsScreen: View {
                     case .error(let type):
                         switch type {
                         case .channel:
-                            Text(Localizable.error_enter_valid_url.localized)
-                                .font(.bodyXLarge)
-                                .foregroundColor(AppColors.error.color)
+                            if viewModel.checkInternetConnection() {
+                                Text(Localizable.error_enter_valid_url.localized)
+                                    .font(.bodySmall)
+                                    .foregroundColor(AppColors.error.color)
+                            }
+                            else {
+                                
+                                ZStack{}
+                                    .onAppear {
+                                        isShown = true
+                                    }
+                            }
                             
                         case .feed:
                             ChannelDataView(viewModel: viewModel)
                         }
                         
                     case .loading:
-                            ProgressView {
-                                Text(Localizable.loading_state_title.localized)
-                                    .font(.bodyLarge)
-                                    .foregroundColor(AppColors.darkGrey.color)
-                                    .bold()
-                            }
-                            .tint(AppColors.dark.color)
-                            .foregroundColor(AppColors.dark.color)
+                        ProgressView {
+                            Text(Localizable.loading_state_title.localized)
+                                .font(.bodyLarge)
+                                .foregroundColor(AppColors.darkGrey.color)
+                                .bold()
+                        }
+                        .tint(AppColors.dark.color)
+                        .foregroundColor(AppColors.dark.color)
                         
                     case .none:
                         EmptyView()
@@ -68,6 +78,12 @@ struct RSSChannelsScreen: View {
                     Spacer()
                 }
             }
+            .overlay(
+                CustomModalView(modalType: .twoButtonsAlert, cancelButtonTitle: "Cancel", confirmButtonTitle: "OK", title: "Internet connection failed", message: "Please check your Internet connection.", cancelButtonShow: false, hasDescription: true, onConfirmButtonTapped: { [weak viewModel] in
+                    isShown = false
+                })
+                    .opacity(isShown ? 1 : 0)
+            )
             .padding(.horizontal, 20)
             .task {
                 if !viewModel.fetched {
@@ -79,7 +95,7 @@ struct RSSChannelsScreen: View {
 }
 
 #Preview {
-    RSSChannelsScreen(viewModel: .init(rssService: ServiceFactory.rssService))
+    RSSChannelsScreen(viewModel: .init(rssService: ServiceFactory.rssService, connectivityService: ServiceFactory.connectivityService))
 }
 
 
@@ -92,58 +108,58 @@ struct ChannelDataView: View {
     }
     var body: some View {
         ScrollView(showsIndicators: false) {
-                                        LazyVStack(alignment: .leading, spacing: 10) {
-                                            ForEach(viewModel.rssChannels) { channel in
-                                                
-                                                ZStack(alignment: .bottomTrailing) {
-                                                    AsyncImage(url: URL(string: channel.image ?? "")) { phase in
-                                                        switch phase {
-                                                        case .empty:
-                                                            Image(AppImages.no_image_placeholder_img.image)
-                                                                .resizable()
-                                                                .scaledToFit()
-                                                                .foregroundColor(AppColors.disabled.color)
-                                                            
-                                                        case .success(let image):
-                                                            image
-                                                                .resizable()
-                                                                .scaledToFit()
-                                                                .clipped()
-                                                            
-                                                        case .failure:
-                                                            Image(AppImages.no_image_placeholder_img.image)
-                                                                .resizable()
-                                                                .scaledToFit()
-                                                                .foregroundColor(AppColors.disabled.color)
-                                                            
-                                                        @unknown default:
-                                                            ProgressView()
-                                                                .frame(height: 120)
-                                                                .background(AppColors.disabled.color)
-                                                        }
-                                                    }
-                                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                                    
-                                                    Text(channel.name)
-                                                        .frame(maxWidth: 200)
-                                                        .font(.bodyXLarge)
-                                                        .foregroundColor(AppColors.dark.color)
-                                                        .padding(7)
-                                                        .background(AppColors.lightGrey.color)
-                                                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                                                        .offset(x: -10, y: -10)
-                                                }
-                                                .frame(maxWidth: .infinity)
-                                                .onTapGesture {
-                                                    viewModel.fetchFeed(for: channel)
-                                                    presentationMode.wrappedValue.dismiss()
-                                                }
-                                                .padding(.bottom, 5)
-                                                
-                                                Divider()
-                                            }
-                                        }
-                                    }
-
+            LazyVStack(alignment: .leading, spacing: 10) {
+                ForEach(viewModel.rssChannels) { channel in
+                    
+                    ZStack(alignment: .bottomTrailing) {
+                        AsyncImage(url: URL(string: channel.image ?? "")) { phase in
+                            switch phase {
+                            case .empty:
+                                Image(AppImages.no_image_placeholder_img.image)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .foregroundColor(AppColors.disabled.color)
+                                
+                            case .success(let image):
+                                image
+                                    .resizable()
+                                    .scaledToFit()
+                                    .clipped()
+                                
+                            case .failure:
+                                Image(AppImages.no_image_placeholder_img.image)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .foregroundColor(AppColors.disabled.color)
+                                
+                            @unknown default:
+                                ProgressView()
+                                    .frame(height: 120)
+                                    .background(AppColors.disabled.color)
+                            }
+                        }
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        
+                        Text(channel.name)
+                            .frame(maxWidth: 200)
+                            .font(.bodyXLarge)
+                            .foregroundColor(AppColors.dark.color)
+                            .padding(7)
+                            .background(AppColors.lightGrey.color)
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                            .offset(x: -10, y: -10)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .onTapGesture {
+                        viewModel.fetchFeed(for: channel)
+                        presentationMode.wrappedValue.dismiss()
+                    }
+                    .padding(.bottom, 5)
+                    
+                    Divider()
+                }
+            }
+        }
+        
     }
 }

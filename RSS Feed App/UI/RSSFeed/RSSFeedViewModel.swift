@@ -21,8 +21,10 @@ enum FetchState {
 
 class RSSFeedViewModel: ObservableObject {
     private var rssService: RSSServiceProtocol
-    init(rssService: RSSServiceProtocol) {
+    private var connectivityService: ConnectivityProtocol
+    init(rssService: RSSServiceProtocol, connectivityService: ConnectivityProtocol) {
         self.rssService = rssService
+        self.connectivityService = connectivityService
     }
     @Published var state: FetchState = .none
     @Published var fetched: Bool = false
@@ -100,5 +102,9 @@ class RSSFeedViewModel: ObservableObject {
                 print("Failed to fetch or parse RSS feed: \(error.localizedDescription)")
             }
         }
+    }
+    
+    func checkInternetConnection() -> Bool {
+        return connectivityService.isConnected
     }
 }

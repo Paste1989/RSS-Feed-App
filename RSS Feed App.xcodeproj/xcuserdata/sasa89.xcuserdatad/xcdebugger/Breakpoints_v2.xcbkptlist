@@ -3,4 +3,50 @@
    uuid = "39232DE4-E5D2-40BA-8D06-E112DEF81362"
    type = "1"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "ED25285E-73FE-4D0A-AA7A-59693CF51B47"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "RSS Feed App/UI/RSSFeed/RSSFeedViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "124"
+            endingLineNumber = "124">
+            <Locations>
+               <Location
+                  uuid = "ED25285E-73FE-4D0A-AA7A-59693CF51B47 - 74843dead6bd5aa1"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #3 () -&gt; () in closure #1 () -&gt; SwiftUI.TupleView&lt;(&lt;&lt;opaque return type of SwiftUI.View.edgesIgnoringSafeArea(SwiftUI.Edge.Set) -&gt; some&gt;&gt;.0, &lt;&lt;opaque return type of SwiftUI.View.onAppear(perform: Swift.Optional&lt;() -&gt; ()&gt;) -&gt; some&gt;&gt;.0, Swift.Optional&lt;_D__RSS_Feed_App.AlertScreen&gt;)&gt; in _D__RSS_Feed_App.RSSChannelsScreen.body.getter : some"
+                  moduleName = "[D] RSS Feed App"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/sasa89/Desktop/RSS%20Feed%20App/RSS%20Feed%20App/UI/RSSFeed/RSSFeedViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "124"
+                  endingLineNumber = "124">
+               </Location>
+               <Location
+                  uuid = "ED25285E-73FE-4D0A-AA7A-59693CF51B47 - 3327279cbf7580a0"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #4 () -&gt; () in closure #1 () -&gt; SwiftUI.TupleView&lt;(&lt;&lt;opaque return type of SwiftUI.View.edgesIgnoringSafeArea(SwiftUI.Edge.Set) -&gt; some&gt;&gt;.0, &lt;&lt;opaque return type of SwiftUI.View.onAppear(perform: Swift.Optional&lt;() -&gt; ()&gt;) -&gt; some&gt;&gt;.0, Swift.Optional&lt;_D__RSS_Feed_App.AlertScreen&gt;)&gt; in _D__RSS_Feed_App.RSSChannelsScreen.body.getter : some"
+                  moduleName = "[D] RSS Feed App"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/sasa89/Desktop/RSS%20Feed%20App/RSS%20Feed%20App/UI/RSSFeed/RSSFeedViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "124"
+                  endingLineNumber = "124">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>

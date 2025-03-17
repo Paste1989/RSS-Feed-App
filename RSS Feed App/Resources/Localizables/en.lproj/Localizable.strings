@@ -11,7 +11,7 @@
 "favorites_tab_title" = "Favorites";
 "news_title" = "News";
 "channels_btn_title" = "Channels";
-"error_enter_valid_url" = "Please enter valid RSS URL.";
+"error_enter_valid_url" = "Please enter valid URL.";
 "enter_url_placeholder" = "Enter URL";
 "loading_state_title" = "Loading...";
 "rss_chanells_title" = "RSS Channels";

@@ -11,7 +11,7 @@
 "favorites_tab_title" = "Favoriti";
 "news_title" = "Novosti";
 "channels_btn_title" = "Kanali";
-"error_enter_valid_url" = "Molim upišite validan RSS URL.";
+"error_enter_valid_url" = "Molim upišite validan URL.";
 "enter_url_placeholder" = "Unesite URL";
 "loading_state_title" = "Učitavanje...";
 "rss_chanells_title" = "RSS Kanali";

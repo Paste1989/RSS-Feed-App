@@ -12,6 +12,7 @@ struct RSSFeedScreen: View {
     @ObservedObject var viewModel: RSSFeedViewModel
     @State var inputText: String = ""
     @State var rssChanelsScreenShown: Bool = false
+    @State var isShown: Bool = false
     
     var body: some View {
         ZStack{
@@ -135,9 +136,17 @@ struct RSSFeedScreen: View {
                                 }
                             }
                         case .error:
-                            Text(Localizable.error_enter_valid_url.localized)
-                                .font(.bodySmall)
-                                .foregroundColor(AppColors.error.color)
+                            if viewModel.checkInternetConnection() {
+                                Text(Localizable.error_enter_valid_url.localized)
+                                    .font(.bodySmall)
+                                    .foregroundColor(AppColors.error.color)
+                            }
+                            else {
+                                Text("No internet connection")
+                                    .onAppear {
+                                        isShown = true
+                                    }
+                            }
                             
                     default:
                         EmptyView()
@@ -153,6 +162,12 @@ struct RSSFeedScreen: View {
                     viewModel.fetchRSSChannels()
                 }
             }
+            .overlay(
+                CustomModalView(modalType: .twoButtonsAlert, cancelButtonTitle: "Cancel", confirmButtonTitle: "OK", title: "Internet connection failed", message: "Please check your Internet connection.", cancelButtonShow: false, hasDescription: true, onConfirmButtonTapped: { [weak viewModel] in
+                    isShown = false
+                })
+                .opacity(isShown ? 1 : 0)
+            )
             .sheet(isPresented: $rssChanelsScreenShown, onDismiss: {
                 rssChanelsScreenShown = false
                 inputText = viewModel.channelURL

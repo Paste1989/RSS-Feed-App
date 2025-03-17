@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct DetailsScreen: View {
-    @ObservedObject var viewModel: RSSFeedViewModel
+    //@ObservedObject var viewModel: RSSFeedViewModel
     
     var body: some View {
         ZStack{
@@ -63,10 +63,10 @@ struct DetailsScreen: View {
 //                }
 //            }
         }
-        .navigationBarTitle(Text(viewModel.channelTitle))
+        
     }
 }
     
     #Preview {
-        DetailsScreen(viewModel: .init(rssService: ServiceFactory.rssService))
+        DetailsScreen()
     }

@@ -8,6 +8,10 @@
 import Foundation
 
 struct ServiceFactory {
+    static var connectivityService: ConnectivityProtocol {
+        return ConnectivityService()
+    }
+    
     static var rssService: RSSServiceProtocol {
         return RSSService()
     }
