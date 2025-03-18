@@ -112,12 +112,10 @@ extension RSSParserService {
                 currentImage = trimmedString
             case "description":
                 currentDescription += trimmedString
-            case "category":
-                currentCategories.append(trimmedString)
             default: break
             }
             
-            print("aaaa: \(trimmedString) ------ \(currentImage)")
+            //print("aaaa: \(trimmedString) ------ \(currentImage)")
         }
         else if mode == .channel {
             if currentElement == "title", channelTitle.isEmpty {
@@ -128,7 +126,7 @@ extension RSSParserService {
     
     func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
         if mode == .feed, elementName == "item" {
-            let item = RSSFeedItem(title: currentTitle, description: currentDescription, image: currentImage, link: currentLink, categories: currentCategories)
+            let item = RSSFeedItem(title: currentTitle, description: currentDescription, image: currentImage, link: currentLink)
             items.append(item)
         }
     }

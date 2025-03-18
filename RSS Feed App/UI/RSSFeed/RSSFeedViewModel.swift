@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum FetchState {
+enum FetchState: Equatable {
     case none
     case success(type: ContentType)
     case error(type: ContentType)
@@ -20,44 +20,74 @@ enum FetchState {
 }
 
 class RSSFeedViewModel: ObservableObject {
-    private var rssService: RSSServiceProtocol
+    private var persistenceService: PersistenceServiceProtocol
     private var connectivityService: ConnectivityProtocol
-    init(rssService: RSSServiceProtocol, connectivityService: ConnectivityProtocol) {
-        self.rssService = rssService
+    private var rssService: RSSServiceProtocol
+    init(persistenceService: PersistenceServiceProtocol , rssService: RSSServiceProtocol, connectivityService: ConnectivityProtocol) {
+        self.persistenceService = persistenceService
         self.connectivityService = connectivityService
+        self.rssService = rssService
     }
+    private let channelsSerice: RSSChannelService = RSSChannelService()
     @Published var state: FetchState = .none
-    @Published var fetched: Bool = false
-    @Published var currentChannel: RSSChannel?
+    @Published var currentChannel: RSSChannelModel?
     @Published var channelTitle: String = ""
     @Published var channelURL: String = ""
     @Published var rssFeedItems: [RSSFeedItem] = []
-    @Published var rssChannels: [RSSChannel] = []
-    @Published var channels: [RSSChannel] = []
+    @Published var rssChannels: [RSSChannelModel] = []
+    @Published var channels: [RSSChannelModel] = []
     
     func fetchRSSChannels() {
-        state = .loading(type: .channel)
+        print("channels fetching strated...")
+        DispatchQueue.main.async { [weak self] in
+            self?.state = .loading(type: .channel)
+        }
         Task {
             do {
-                let channels = try await rssService.fetchRSSChannels()
+                try await rssService.fetchRSSChannels()
                 DispatchQueue.main.async { [weak self] in
-                    self?.rssChannels = channels
                     self?.state = .success(type: .channel)
-                    self?.fetched = true
+                    print("channels fetching finished...")
+                    self?.initalDataFetched()
+                    self?.getChannelsfromStorage()
                 }
-                //print("Found RSS Channels")
             }
             catch {
                 DispatchQueue.main.async { [weak self] in
                     self?.state = .error(type: .channel)
                 }
-                print("Error: \(error)")
+                print("Error fetcing channels: \(error)")
             }
         }
     }
     
-    func fetchFeed(for channel: RSSChannel) {
-        state = .loading(type: .feed)
+    func getChannelsfromStorage() {
+        Task {
+            do {
+                let channels = try await rssService.getChannelsFromStorage()
+                DispatchQueue.main.async { [weak self] in
+                    if !channels.isEmpty {
+                        self?.state = .success(type: .channel)
+                        self?.rssChannels = channels
+                    }
+                    else {
+                        self?.state = .loading(type: .channel)
+                    }
+                }
+            }
+            catch {
+                DispatchQueue.main.async { [weak self] in
+                    self?.state = .error(type: .channel)
+                }
+                print("Error getting channels from storage: \(error)")
+            }
+        }
+    }
+    
+    func fetchFeed(for channel: RSSChannelModel) {
+        DispatchQueue.main.async { [weak self] in
+            self?.state = .loading(type: .feed)
+        }
         Task {
             do {
                 let items = try await rssService.fetchRSSFeed(url: channel.link)
@@ -67,7 +97,6 @@ class RSSFeedViewModel: ObservableObject {
                     self?.channelTitle = self?.currentChannel?.name ?? ""
                     self?.channelURL = self?.currentChannel?.link ?? ""
                     self?.state = .success(type: .feed)
-                    
                     
                     if let self = self, !self.channels.contains(where: { $0.link == channel.link }) {
                         self.channels.append(channel)
@@ -84,7 +113,9 @@ class RSSFeedViewModel: ObservableObject {
     }
     
     func fetchFeed(with url: String) {
-        state = .loading(type: .feed)
+        DispatchQueue.main.async { [weak self] in
+            self?.state = .loading(type: .feed)
+        }
         Task {
             do {
                 let items = try await rssService.fetchRSSFeed(url: url)
@@ -106,5 +137,13 @@ class RSSFeedViewModel: ObservableObject {
     
     func checkInternetConnection() -> Bool {
         return connectivityService.isConnected
+    }
+    
+    func initalDataFetched() {
+        persistenceService.isInitalDataFetched = true
+    }
+    
+    func isInitalDataFetched() -> Bool {
+        persistenceService.isInitalDataFetched
     }
 }

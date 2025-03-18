@@ -24,6 +24,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B724D6712D89D305005421C9 /* RSSChannelEntity+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RSSChannelEntity+CoreDataClass.swift"; sourceTree = "<group>"; };
+		B724D6722D89D305005421C9 /* RSSChannelEntity+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RSSChannelEntity+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		B76FF8B72D8035D500FE7511 /* [D] RSS Feed App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "[D] RSS Feed App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B76FF8D02D8035D900FE7511 /* RSS Feed AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "RSS Feed AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B76FF8DA2D8035D900FE7511 /* RSS Feed AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "RSS Feed AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -88,6 +90,8 @@
 		B76FF8AE2D8035D500FE7511 = {
 			isa = PBXGroup;
 			children = (
+				B724D6712D89D305005421C9 /* RSSChannelEntity+CoreDataClass.swift */,
+				B724D6722D89D305005421C9 /* RSSChannelEntity+CoreDataProperties.swift */,
 				B76FF8B92D8035D600FE7511 /* RSS Feed App */,
 				B76FF8D32D8035D900FE7511 /* RSS Feed AppTests */,
 				B76FF8DD2D8035D900FE7511 /* RSS Feed AppUITests */,

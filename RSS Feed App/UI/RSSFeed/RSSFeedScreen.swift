@@ -128,7 +128,7 @@ struct RSSFeedScreen: View {
                                         }
                                     }
                                     .onTapGesture {
-                                        print("tapped ...")
+                                        print("tapped...")
                                     }
                                     .padding(.vertical, 10)
                                     
@@ -147,21 +147,18 @@ struct RSSFeedScreen: View {
                                         isShown = true
                                     }
                             }
+                        default:
+                            EmptyView()
                             
-                    default:
-                        EmptyView()
-                    }
-                        
+                        }
                         Spacer()
                     }
                 }
+                .onChange(of: viewModel.state, { oldValue, newValue in
+                    print("-> new: \(newValue)")
+                })
             }
             .padding(.horizontal, 10)
-            .task {
-                if !viewModel.fetched {
-                    viewModel.fetchRSSChannels()
-                }
-            }
             .overlay(
                 CustomModalView(modalType: .twoButtonsAlert, cancelButtonTitle: "Cancel", confirmButtonTitle: "OK", title: "Internet connection failed", message: "Please check your Internet connection.", cancelButtonShow: false, hasDescription: true, onConfirmButtonTapped: { [weak viewModel] in
                     isShown = false
@@ -191,7 +188,12 @@ struct RSSFeedScreen: View {
                         .font(.bodyMedium)
                 }
             })
+            .task {
+                viewModel.getChannelsfromStorage()
+                if !viewModel.isInitalDataFetched() {
+                    viewModel.fetchRSSChannels()
+                }
+            }
         }
     }
 }
-

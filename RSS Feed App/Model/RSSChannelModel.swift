@@ -7,8 +7,8 @@
 
 import Foundation
 
-struct RSSChannel: Identifiable, Equatable {
-    let id = UUID()
+struct RSSChannelModel: Identifiable, Equatable {
+    let id: UUID
     let name: String
     let image: String?
     let link: String

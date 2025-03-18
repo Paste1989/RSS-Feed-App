@@ -13,5 +13,4 @@ struct RSSFeedItem: Identifiable {
     let description: String?
     let image: String?
     let link: String
-    var categories: [String] = []
 }

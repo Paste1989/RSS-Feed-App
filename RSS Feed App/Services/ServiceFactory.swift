@@ -12,11 +12,23 @@ struct ServiceFactory {
         return ConnectivityService()
     }
     
+    static var coreDataService: CoredataServiceProtocol {
+        return CoreDataService()
+    }
+    
+    static var persistenceService: PersistenceServiceProtocol {
+        return PersistenceService()
+    }
+    
     static var rssService: RSSServiceProtocol {
         return RSSService()
     }
     
     static var rssParserService: RSSParserServiceProtocol {
         return RSSParserService()
+    }
+    
+    static var rssChannelServic: RSSChannelServiceProtocol {
+        return RSSChannelService()
     }
 }

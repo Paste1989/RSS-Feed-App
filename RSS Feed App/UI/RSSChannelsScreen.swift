@@ -39,8 +39,7 @@ struct RSSChannelsScreen: View {
                     
                     switch viewModel.state {
                     case .success:
-                        ChannelDataView(viewModel: viewModel)
-                        
+                        ChannelDataView(viewModel: viewModel) 
                     case .error(let type):
                         switch type {
                         case .channel:
@@ -56,20 +55,19 @@ struct RSSChannelsScreen: View {
                                         isShown = true
                                     }
                             }
-                            
                         case .feed:
                             ChannelDataView(viewModel: viewModel)
                         }
-                        
                     case .loading:
-                        ProgressView {
-                            Text(Localizable.loading_state_title.localized)
-                                .font(.bodyLarge)
-                                .foregroundColor(AppColors.darkGrey.color)
-                                .bold()
-                        }
-                        .tint(AppColors.dark.color)
-                        .foregroundColor(AppColors.dark.color)
+                            ProgressView {
+                                Text(Localizable.loading_state_title.localized)
+                                    .font(.bodyLarge)
+                                    .foregroundColor(AppColors.darkGrey.color)
+                                    .bold()
+                            }
+                            .tint(AppColors.dark.color)
+                            .foregroundColor(AppColors.dark.color)
+                    
                         
                     case .none:
                         EmptyView()
@@ -85,17 +83,12 @@ struct RSSChannelsScreen: View {
                     .opacity(isShown ? 1 : 0)
             )
             .padding(.horizontal, 20)
-            .task {
-                if !viewModel.fetched {
-                    viewModel.fetchRSSChannels()
-                }
-            }
         }
     }
 }
 
 #Preview {
-    RSSChannelsScreen(viewModel: .init(rssService: ServiceFactory.rssService, connectivityService: ServiceFactory.connectivityService))
+    RSSChannelsScreen(viewModel: .init(persistenceService: ServiceFactory.persistenceService, rssService: ServiceFactory.rssService, connectivityService: ServiceFactory.connectivityService))
 }
 
 

@@ -12,13 +12,16 @@ enum ParseError: String {
 }
 
 protocol RSSServiceProtocol {
-    func fetchRSSChannels() async throws -> [RSSChannel]
+    func fetchRSSChannels() async throws
     func fetchRSSFeed(url: String) async throws -> [RSSFeedItem]
+    func getChannelsFromStorage() async throws -> [RSSChannelModel]
 }
 
 class RSSService: NSObject, RSSServiceProtocol, XMLParserDelegate {
     private let channelsURL: String = "https://rss.feedspot.com/world_news_rss_feeds/"
     private let rssParserService = ServiceFactory.rssParserService
+    private let rssChannePersistanceService = RSSChannelService()
+    private var channels: [RSSChannelModel] = []
     private var items: [RSSFeedItem] = []
     private var currentElement: String = ""
     private var currentTitle: String = ""
@@ -29,24 +32,30 @@ class RSSService: NSObject, RSSServiceProtocol, XMLParserDelegate {
 
 //MARK: - RSS Channels
 extension RSSService {
-    func fetchRSSChannels() async throws -> [RSSChannel] {
-        guard let url = URL(string: channelsURL) else { throw URLError(.badURL) }
+    func fetchRSSChannels() async throws {
+        guard let url = URL(string: channelsURL) else { return }
         
-        let (data, _) = try await URLSession.shared.data(from: url)
-        guard let html = String(data: data, encoding: .utf8) else {
-            throw URLError(.cannotDecodeContentData)
-        }
-        
-        let links = extractRSSLinks(from: html)
-        var channels: [RSSChannel] = []
-        
-        for link in links {
-            if let channelData = try? await fetchChannelData(from: link) {
-                let ch = RSSChannel(name: channelData.name, image: channelData.image, link: link)
-                channels.append(ch)
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            guard let html = String(data: data, encoding: .utf8) else {
+                //throw URLError(.cannotDecodeContentData)
+                return
             }
+            
+            let links = extractRSSLinks(from: html)
+            for link in links {
+                if let channelData = try? await fetchChannelData(from: link) {
+                    let channelModel = RSSChannelModel(id: UUID(), name: channelData.name, image: channelData.image, link: link)
+                    channels.append(channelModel)
+                
+                }
+            }
+            saveChannelsToStorage()
+            print("CHANNELS COUN == \(channels.count)")
         }
-        return channels
+        catch {
+            print("Error fetching channels: \(error)")
+        }
     }
     
     private func extractRSSLinks(from html: String) -> [String] {
@@ -87,5 +96,20 @@ extension RSSService {
         let parser = RSSParserService()
         
         return try parser.parseFeed(from: data)
+    }
+}
+
+//MARK: - Core Data
+extension RSSService {
+    func saveChannelsToStorage() {
+        for channelModel in channels {
+            rssChannePersistanceService.saveRSSChannel(rssChannel: channelModel)
+        }
+        
+    }
+    
+    func getChannelsFromStorage() async throws -> [RSSChannelModel] {
+        print("channels from storage COUNT: \(rssChannePersistanceService.fetchRSSChannels().count)")
+        return rssChannePersistanceService.fetchRSSChannels()
     }
 }
