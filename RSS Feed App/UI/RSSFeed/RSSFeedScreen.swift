@@ -20,11 +20,16 @@ struct RSSFeedScreen: View {
             
             VStack(spacing: 0) {
                 HStack(spacing: 0) {
-                    TextField(Localizable.enter_url_placeholder.localized, text: $inputText)
+                    TextField("", text: $inputText)
+                        .frame(width: UIScreen.main.bounds.width - 100)
+                        .padding(10)
+                        .background(AppColors.white.color)
+                        .foregroundColor(AppColors.darkGrey.color)
+                        .placeholder(when: inputText.isEmpty, Localizable.enter_url_placeholder.localized, color: AppColors.darkGrey.color)
+                        .cornerRadius(10)
+                        .shadow(color: Color.black.opacity(0.08), radius: 60, x: 0.0, y: 16)
+                        .accentColor(AppColors.dark.color)
                         .padding()
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .frame(width: UIScreen.main.bounds.width - 50)
-                        .foregroundColor(AppColors.white.color)
                     
                     Button {
                         viewModel.fetchFeed(with: inputText)
@@ -215,5 +220,30 @@ struct RSSFeedScreen: View {
                 viewModel.getFeedItemsfromStorage()
             }
         }
+    }
+}
+
+
+struct PlaceholderModifier: ViewModifier {
+    var placeholder: String
+    var isShowing: Bool
+    var placeholderColor: Color
+
+    func body(content: Content) -> some View {
+        ZStack(alignment: .leading) {
+            content
+            if isShowing {
+                Text(placeholder)
+                    .foregroundColor(placeholderColor)
+                    .padding(.leading, 5)
+                    .padding(.top, 8)
+            }
+        }
+    }
+}
+
+extension View {
+    func placeholder(when shouldShow: Bool, _ placeholder: String, color: Color = .gray) -> some View {
+        self.modifier(PlaceholderModifier(placeholder: placeholder, isShowing: shouldShow, placeholderColor: color))
     }
 }
