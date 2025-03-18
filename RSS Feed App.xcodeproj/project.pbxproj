@@ -24,6 +24,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B71757E32D89DDB8009AB7A0 /* RSSFeedEntity+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RSSFeedEntity+CoreDataClass.swift"; sourceTree = "<group>"; };
+		B71757E42D89DDB8009AB7A0 /* RSSFeedEntity+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RSSFeedEntity+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		B724D6712D89D305005421C9 /* RSSChannelEntity+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RSSChannelEntity+CoreDataClass.swift"; sourceTree = "<group>"; };
 		B724D6722D89D305005421C9 /* RSSChannelEntity+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RSSChannelEntity+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		B76FF8B72D8035D500FE7511 /* [D] RSS Feed App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "[D] RSS Feed App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -90,6 +92,8 @@
 		B76FF8AE2D8035D500FE7511 = {
 			isa = PBXGroup;
 			children = (
+				B71757E32D89DDB8009AB7A0 /* RSSFeedEntity+CoreDataClass.swift */,
+				B71757E42D89DDB8009AB7A0 /* RSSFeedEntity+CoreDataProperties.swift */,
 				B724D6712D89D305005421C9 /* RSSChannelEntity+CoreDataClass.swift */,
 				B724D6722D89D305005421C9 /* RSSChannelEntity+CoreDataProperties.swift */,
 				B76FF8B92D8035D600FE7511 /* RSS Feed App */,

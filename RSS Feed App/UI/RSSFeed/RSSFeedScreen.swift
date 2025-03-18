@@ -35,23 +35,44 @@ struct RSSFeedScreen: View {
                     }
                 }
                 
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 0) {
-                        ForEach(viewModel.channels) { channel in
-                            VStack(spacing: 0) {
-                                Text(channel.name)
-                                    .foregroundColor(viewModel.currentChannel == channel ? AppColors.white.color : AppColors.dark.color)
-                                    .font(.bodyLarge)
+                HStack(spacing: 0) {
+                    if !viewModel.channels.isEmpty {
+                        Button {
+                            print("remove tapped")
+                            Task {
+                                await viewModel.removeFeedItemsFromStorage()
                             }
-                            .padding(7)
-                            .background(viewModel.currentChannel == channel ? AppColors.primary.color : AppColors.white.color)
-                            .clipShape(RoundedRectangle(cornerRadius: 10))
-                            .onTapGesture {
-                                viewModel.fetchFeed(for: channel)
-                                inputText = channel.link
-                            }
+                        } label: {
+                            Image(systemName: "xmark.circle")
+                                .frame(width: 50, height: 50)
+                                .foregroundColor(AppColors.dark.color)
+                                .font(.bodyLarge)
                         }
-                        .padding(.horizontal, 5)
+                    }
+                    
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 0) {
+                            
+                            //.padding(.vertical, 20)
+                            
+                            ForEach(viewModel.channels) { channel in
+                                VStack(spacing: 0) {
+                                    Text(channel.name)
+                                        .foregroundColor(viewModel.currentChannel == channel ? AppColors.white.color : AppColors.dark.color)
+                                        .font(.bodyLarge)
+                                }
+                                .padding(7)
+                                .background(viewModel.currentChannel == channel ? AppColors.primary.color : AppColors.white.color)
+                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                                .onTapGesture {
+                                    viewModel.fetchFeed(for: channel)
+                                    inputText = channel.link
+                                }
+                                
+                                //.padding(20)
+                            }
+                            .padding(.horizontal, 5)
+                        }
                     }
                 }
                 .padding(.horizontal, 10)
@@ -154,9 +175,6 @@ struct RSSFeedScreen: View {
                         Spacer()
                     }
                 }
-                .onChange(of: viewModel.state, { oldValue, newValue in
-                    print("-> new: \(newValue)")
-                })
             }
             .padding(.horizontal, 10)
             .overlay(
@@ -193,6 +211,8 @@ struct RSSFeedScreen: View {
                 if !viewModel.isInitalDataFetched() {
                     viewModel.fetchRSSChannels()
                 }
+                
+                viewModel.getFeedItemsfromStorage()
             }
         }
     }

@@ -28,12 +28,12 @@ class RSSFeedViewModel: ObservableObject {
         self.connectivityService = connectivityService
         self.rssService = rssService
     }
-    private let channelsSerice: RSSChannelService = RSSChannelService()
+    private let channelsSerice: RSSChannelDataService = RSSChannelDataService()
     @Published var state: FetchState = .none
     @Published var currentChannel: RSSChannelModel?
     @Published var channelTitle: String = ""
     @Published var channelURL: String = ""
-    @Published var rssFeedItems: [RSSFeedItem] = []
+    @Published var rssFeedItems: [RSSFeedItemModel] = []
     @Published var rssChannels: [RSSChannelModel] = []
     @Published var channels: [RSSChannelModel] = []
     
@@ -99,7 +99,7 @@ class RSSFeedViewModel: ObservableObject {
                     self?.state = .success(type: .feed)
                     
                     if let self = self, !self.channels.contains(where: { $0.link == channel.link }) {
-                        self.channels.append(channel)
+                        self.channels.insert(channel, at: 0)
                     }
                 }
             }
@@ -133,6 +133,35 @@ class RSSFeedViewModel: ObservableObject {
                 print("Failed to fetch or parse RSS feed: \(error.localizedDescription)")
             }
         }
+    }
+    
+    func getFeedItemsfromStorage() {
+        Task {
+            do {
+                let items = try await rssService.getFeedItemsFromStorage()
+                DispatchQueue.main.async { [weak self] in
+                    if !items.isEmpty {
+                        self?.channelTitle = "Last searched"
+                        self?.state = .success(type: .feed)
+                        self?.rssFeedItems = items
+                    }
+                    else {
+                        self?.state = .loading(type: .feed)
+                    }
+                }
+            }
+            catch {
+                DispatchQueue.main.async { [weak self] in
+                    self?.state = .error(type: .feed)
+                }
+                print("Error getting feed from storage: \(error)")
+            }
+        }
+    }
+    
+    
+    func removeFeedItemsFromStorage() async {
+        await rssService.removeFeedItemsFromStorage()
     }
     
     func checkInternetConnection() -> Bool {

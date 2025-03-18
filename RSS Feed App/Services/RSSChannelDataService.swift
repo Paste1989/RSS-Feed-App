@@ -8,13 +8,13 @@
 import Foundation
 import CoreData
 
-protocol RSSChannelServiceProtocol {
+protocol RSSChannelDataServiceProtocol {
     func saveRSSChannel(rssChannel: RSSChannelModel)
     func fetchRSSChannels() -> [RSSChannelModel]
     func deleteRSSChannel(channel: RSSChannelEntity)
 }
 
-class RSSChannelService: RSSChannelServiceProtocol {
+class RSSChannelDataService: RSSChannelDataServiceProtocol {
     private let coreDataService = CoreDataService()
     private let context = CoreDataService().context
 

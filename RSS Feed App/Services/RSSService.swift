@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreData
 
 enum ParseError: String {
     case invalidURL = "Invalid URL"
@@ -13,16 +14,19 @@ enum ParseError: String {
 
 protocol RSSServiceProtocol {
     func fetchRSSChannels() async throws
-    func fetchRSSFeed(url: String) async throws -> [RSSFeedItem]
+    func fetchRSSFeed(url: String) async throws -> [RSSFeedItemModel]
     func getChannelsFromStorage() async throws -> [RSSChannelModel]
+    func getFeedItemsFromStorage() async throws -> [RSSFeedItemModel]
+    func removeFeedItemsFromStorage() async
 }
 
 class RSSService: NSObject, RSSServiceProtocol, XMLParserDelegate {
     private let channelsURL: String = "https://rss.feedspot.com/world_news_rss_feeds/"
     private let rssParserService = ServiceFactory.rssParserService
-    private let rssChannePersistanceService = RSSChannelService()
+    private let rssChannelDataService = RSSChannelDataService()
+    private let rssFeedDataService = RSSFeedDataService()
     private var channels: [RSSChannelModel] = []
-    private var items: [RSSFeedItem] = []
+    private var feedItems: [RSSFeedItemModel] = []
     private var currentElement: String = ""
     private var currentTitle: String = ""
     private var currentLink: String = ""
@@ -33,13 +37,12 @@ class RSSService: NSObject, RSSServiceProtocol, XMLParserDelegate {
 //MARK: - RSS Channels
 extension RSSService {
     func fetchRSSChannels() async throws {
-        guard let url = URL(string: channelsURL) else { return }
+        guard let url = URL(string: channelsURL) else { throw URLError.init(.badURL) }
         
         do {
             let (data, _) = try await URLSession.shared.data(from: url)
             guard let html = String(data: data, encoding: .utf8) else {
-                //throw URLError(.cannotDecodeContentData)
-                return
+                throw URLError(.cannotDecodeContentData)
             }
             
             let links = extractRSSLinks(from: html)
@@ -87,7 +90,7 @@ extension RSSService {
 
 //MARK: - RSS Feed
 extension RSSService {
-    func fetchRSSFeed(url: String) async throws -> [RSSFeedItem] {
+    func fetchRSSFeed(url: String) async throws -> [RSSFeedItemModel] {
         guard let feedURL = URL(string: url) else {
             throw NSError(domain: ParseError.invalidURL.rawValue, code: 400, userInfo: nil)
         }
@@ -95,7 +98,10 @@ extension RSSService {
         let (data, _) = try await URLSession.shared.data(from: feedURL)
         let parser = RSSParserService()
         
-        return try parser.parseFeed(from: data)
+        feedItems = try parser.parseFeed(from: data)
+        
+        await saveFeedsToStorage()
+        return feedItems
     }
 }
 
@@ -103,13 +109,33 @@ extension RSSService {
 extension RSSService {
     func saveChannelsToStorage() {
         for channelModel in channels {
-            rssChannePersistanceService.saveRSSChannel(rssChannel: channelModel)
+            rssChannelDataService.saveRSSChannel(rssChannel: channelModel)
         }
-        
     }
     
     func getChannelsFromStorage() async throws -> [RSSChannelModel] {
-        print("channels from storage COUNT: \(rssChannePersistanceService.fetchRSSChannels().count)")
-        return rssChannePersistanceService.fetchRSSChannels()
+        print("channels from storage COUNT: \(rssChannelDataService.fetchRSSChannels().count)")
+        return rssChannelDataService.fetchRSSChannels()
+    }
+    
+    func saveFeedsToStorage() async {
+        for feedModel in feedItems {
+            rssFeedDataService.saveRSSFeedItem(item: feedModel)
+        }
+    }
+    
+    func getFeedItemsFromStorage() async throws -> [RSSFeedItemModel] {
+        print("feeds from storage COUNT: \(rssFeedDataService.fetchRSSFeedItems().count)")
+        return rssFeedDataService.fetchRSSFeedItems()
+    }
+    
+    func removeFeedItemsFromStorage() async {
+        let rssFeedItems = rssFeedDataService.fetchRSSFeedItems()
+        
+        for item in rssFeedItems {
+            if let entity = await rssFeedDataService.getEntity(item: item) {
+                rssFeedDataService.deleteRSSFeedItem(item: entity)
+            }
+        }
     }
 }

@@ -8,7 +8,7 @@
 import Foundation
 
 protocol RSSParserServiceProtocol {
-    func parseFeed(from data: Data) throws -> [RSSFeedItem]
+    func parseFeed(from data: Data) throws -> [RSSFeedItemModel]
     func parseChannel(from data: Data) throws -> (name: String, image: String?)
 }
 
@@ -24,7 +24,7 @@ class RSSParserService: NSObject, XMLParserDelegate, RSSParserServiceProtocol {
     private var currentImage: String?
     private var currentDescription = ""
     private var currentCategories: [String] = []
-    private var items: [RSSFeedItem] = []
+    private var items: [RSSFeedItemModel] = []
     
     private var channelTitle: String = ""
     private var channelImage: String?
@@ -47,7 +47,7 @@ extension RSSParserService {
 
 //MARK: - RSS Feed
 extension RSSParserService {
-    func parseFeed(from data: Data) throws -> [RSSFeedItem] {
+    func parseFeed(from data: Data) throws -> [RSSFeedItemModel] {
         mode = .feed
         items.removeAll()
         
@@ -126,7 +126,7 @@ extension RSSParserService {
     
     func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
         if mode == .feed, elementName == "item" {
-            let item = RSSFeedItem(title: currentTitle, description: currentDescription, image: currentImage, link: currentLink)
+            let item = RSSFeedItemModel(id: UUID(), title: currentTitle, description: currentDescription, image: currentImage, link: currentLink)
             items.append(item)
         }
     }

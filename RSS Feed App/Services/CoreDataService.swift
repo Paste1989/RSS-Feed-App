@@ -14,7 +14,6 @@ protocol CoredataServiceProtocol {
     func deleteEntity<T: NSManagedObject>(entity: T, context: NSManagedObjectContext)
 }
 
-
 class CoreDataService: CoredataServiceProtocol {
        lazy var persistentContainer: NSPersistentContainer = {
            let container = NSPersistentContainer(name: "RSS_Feed_App")
@@ -57,6 +56,19 @@ class CoreDataService: CoredataServiceProtocol {
     func deleteEntity<T: NSManagedObject>(entity: T, context: NSManagedObjectContext) {
         context.delete(entity)
         saveContext(context: context)
+    }
+    
+    func getEntity(for model: RSSFeedItemModel) async -> RSSFeedEntity? {
+        let fetchRequest: NSFetchRequest<RSSFeedEntity> = RSSFeedEntity.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "id == %@", model.id as CVarArg)
+
+        do {
+            let entities = try context.fetch(fetchRequest)
+            return entities.first
+        } catch {
+            print("Error fetching RSSFeedEntity: \(error)")
+            return nil
+        }
     }
 }
 
