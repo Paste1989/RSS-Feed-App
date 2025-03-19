@@ -23,40 +23,47 @@ class RSSFeedViewModel: ObservableObject {
     private var persistenceService: PersistenceServiceProtocol
     private var connectivityService: ConnectivityProtocol
     private var rssService: RSSServiceProtocol
-    init(persistenceService: PersistenceServiceProtocol , rssService: RSSServiceProtocol, connectivityService: ConnectivityProtocol) {
+    private let channelsDataService: RSSChannelDataServiceProtocol
+    init(persistenceService: PersistenceServiceProtocol , rssService: RSSServiceProtocol, connectivityService: ConnectivityProtocol, channelsDataService: RSSChannelDataServiceProtocol) {
         self.persistenceService = persistenceService
         self.connectivityService = connectivityService
         self.rssService = rssService
+        self.channelsDataService = channelsDataService
     }
-    private let channelsSerice: RSSChannelDataService = RSSChannelDataService()
     @Published var state: FetchState = .none
     @Published var currentChannel: RSSChannelModel?
-    @Published var channelTitle: String = ""
-    @Published var channelURL: String = ""
     @Published var rssFeedItems: [RSSFeedItemModel] = []
     @Published var rssChannels: [RSSChannelModel] = []
     @Published var channels: [RSSChannelModel] = []
+    @Published var isConnected: Bool = true
     
     func fetchRSSChannels() {
         print("channels fetching strated...")
-        DispatchQueue.main.async { [weak self] in
-            self?.state = .loading(type: .channel)
-        }
-        Task {
-            do {
-                try await rssService.fetchRSSChannels()
-                DispatchQueue.main.async { [weak self] in
-                    self?.state = .success(type: .channel)
-                    print("channels fetching finished...")
-                    self?.initalDataFetched()
-                    self?.getChannelsfromStorage()
+        if isConnected == checkInternetConnection() {
+            DispatchQueue.main.async { [weak self] in
+                self?.state = .loading(type: .channel)
+            }
+            Task {
+                do {
+                    try await rssService.fetchRSSChannels()
+                    DispatchQueue.main.async { [weak self] in
+                        self?.state = .success(type: .channel)
+                        print("channels fetching finished...")
+                        self?.initalDataFetched()
+                        self?.getChannelsfromStorage()
+                    }
+                }
+                catch {
+                    DispatchQueue.main.async { [weak self] in
+                        self?.state = .error(type: .channel)
+                    }
+                    print("Error fetcing channels: \(error)")
                 }
             }
-            catch {
-                DispatchQueue.main.async { [weak self] in
-                    self?.state = .error(type: .channel)
-                }
-                print("Error fetcing channels: \(error)")
+        }
+        else {
+            DispatchQueue.main.async { [weak self] in
+                self?.isConnected = false
             }
         }
     }
@@ -89,52 +96,63 @@ class RSSFeedViewModel: ObservableObject {
     }
     
     func fetchFeed(for channel: RSSChannelModel) {
-        DispatchQueue.main.async { [weak self] in
-            self?.state = .loading(type: .feed)
-        }
-        Task {
-            do {
-                let items = try await rssService.fetchRSSFeed(url: channel.link)
-                DispatchQueue.main.async { [weak self] in
-                    self?.currentChannel = channel
-                    self?.rssFeedItems = items
-                    self?.channelTitle = self?.currentChannel?.name ?? ""
-                    self?.channelURL = self?.currentChannel?.link ?? ""
-                    self?.state = .success(type: .feed)
-                    
-                    if let self = self, !self.channels.contains(where: { $0.link == channel.link }) {
-                        self.channels.insert(channel, at: 0)
+        if isConnected == checkInternetConnection() {
+            DispatchQueue.main.async { [weak self] in
+                self?.state = .loading(type: .feed)
+            }
+            Task {
+                do {
+                    let items = try await rssService.fetchRSSFeed(url: channel.link)
+                    DispatchQueue.main.async { [weak self] in
+                        self?.currentChannel = channel
+                        self?.rssFeedItems = items
+                        self?.state = .success(type: .feed)
+                        
+                        if let self = self, !self.channels.contains(where: { $0.link == channel.link }) {
+                            self.channels.insert(channel, at: 0)
+                        }
                     }
                 }
-            }
-            catch {
-                DispatchQueue.main.async { [weak self] in
-                    self?.state = .error(type: .feed)
+                catch {
+                    DispatchQueue.main.async { [weak self] in
+                        self?.state = .error(type: .feed)
+                    }
+                    print("Failed to fetch or parse RSS feed: \(error.localizedDescription)")
                 }
-                print("Failed to fetch or parse RSS feed: \(error.localizedDescription)")
+            }
+        }
+        else {
+            DispatchQueue.main.async { [weak self] in
+                self?.isConnected = false
             }
         }
     }
     
     func fetchFeed(with url: String) {
-        DispatchQueue.main.async { [weak self] in
-            self?.state = .loading(type: .feed)
-        }
-        Task {
-            do {
-                let items = try await rssService.fetchRSSFeed(url: url)
-                DispatchQueue.main.async { [weak self] in
-                    self?.rssFeedItems = items
-                    self?.channelTitle = self?.channelTitle ?? Localizable.news_title.localized
-                    self?.channelURL = url
-                    self?.state = .success(type: .feed)
+        if isConnected == checkInternetConnection() {
+            DispatchQueue.main.async { [weak self] in
+                self?.state = .loading(type: .feed)
+            }
+            Task {
+                do {
+                    let items = try await rssService.fetchRSSFeed(url: url)
+                    DispatchQueue.main.async { [weak self] in
+                        self?.rssFeedItems = items
+                        self?.currentChannel?.link = url
+                        self?.state = .success(type: .feed)
+                    }
+                }
+                catch {
+                    DispatchQueue.main.async { [weak self] in
+                        self?.state = .error(type: .feed)
+                    }
+                    print("Failed to fetch or parse RSS feed: \(error.localizedDescription)")
                 }
             }
-            catch {
-                DispatchQueue.main.async { [weak self] in
-                    self?.state = .error(type: .feed)
-                }
-                print("Failed to fetch or parse RSS feed: \(error.localizedDescription)")
+        }
+        else {
+            DispatchQueue.main.async { [weak self] in
+                self?.isConnected = false
             }
         }
     }
@@ -145,7 +163,7 @@ class RSSFeedViewModel: ObservableObject {
                 let items = try await rssService.getFeedItemsFromStorage()
                 DispatchQueue.main.async { [weak self] in
                     if !items.isEmpty {
-                        self?.channelTitle = "Last searched"
+                        self?.currentChannel?.name = self?.channels.last?.name ?? Localizable.last_searched_description.localized
                         self?.state = .success(type: .feed)
                         self?.rssFeedItems = items
                     }
@@ -164,20 +182,32 @@ class RSSFeedViewModel: ObservableObject {
     }
     
     func reloadChannels() async {
-        DispatchQueue.main.async { [weak self] in
-            self?.state = .loading(type: .channel)
+        if isConnected == checkInternetConnection() {
+            DispatchQueue.main.async { [weak self] in
+                self?.state = .loading(type: .channel)
+            }
+            await removeChannels()
+            fetchRSSChannels()
         }
-        await removeChannels()
-        fetchRSSChannels()
+        else {
+            DispatchQueue.main.async { [weak self] in
+                self?.isConnected = false
+            }
+        }
     }
     
     
     func removeFeedItemsFromStorage() async {
         await rssService.removeFeedItemsFromStorage()
+        DispatchQueue.main.async { [weak self] in
+            self?.rssFeedItems.removeAll()
+            self?.currentChannel = nil
+            self?.state = .none
+        }
     }
     
     func checkInternetConnection() -> Bool {
-        return connectivityService.isConnected
+        return connectivityService.checkInternetConnection()
     }
     
     func initalDataFetched() {

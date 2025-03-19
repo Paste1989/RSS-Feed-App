@@ -16,3 +16,8 @@
 "loading_state_title" = "Učitavanje...";
 "rss_chanells_title" = "RSS Kanali";
 "read_more_title" = "Opširnije...";
+"cancel_button_title" = "Poništi";
+"ok_button_title" = "OK";
+"internet_connection_failure_title" = "Greška s internet konekcijom";
+"internet_connection_failure_description" = "Molim provjerite vašu internet konekciju.";
+"last_searched_description" = "Posljednje pretraživano";

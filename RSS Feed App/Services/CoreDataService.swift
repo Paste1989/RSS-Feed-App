@@ -18,18 +18,17 @@ protocol CoreDataServiceProtocol {
 
 class CoreDataService: CoreDataServiceProtocol {
     lazy var persistentContainer: NSPersistentContainer = {
-            let container = NSPersistentContainer(name: "RSS_Feed_App")
-            container.loadPersistentStores { _, error in
-                if let error = error {
-                    fatalError("Failed to load Core Data stack: \(error)")
-                }
+        let container = NSPersistentContainer(name: "RSS_Feed_App")
+        container.loadPersistentStores { _, error in
+            if let error = error {
+                fatalError("Failed to load Core Data stack: \(error)")
             }
-            return container
-        }()
-
-        var context: NSManagedObjectContext { persistentContainer.viewContext }
+        }
+        return container
+    }()
     
-    // MARK: - CRUD Operations
+    var context: NSManagedObjectContext { persistentContainer.viewContext }
+    
     func saveContext() {
         if context.hasChanges {
             do {
@@ -39,11 +38,11 @@ class CoreDataService: CoreDataServiceProtocol {
             }
         }
     }
-
+    
     func createEntity<T: NSManagedObject>(ofType entityType: T.Type) -> T {
         return T(context: context)
     }
-
+    
     func fetchEntities<T: NSManagedObject>(ofType entityType: T.Type) -> [T] {
         let request = NSFetchRequest<T>(entityName: String(describing: entityType))
         do {
@@ -53,7 +52,7 @@ class CoreDataService: CoreDataServiceProtocol {
             return []
         }
     }
-
+    
     func deleteEntity(_ object: NSManagedObject) {
         context.delete(object)
         saveContext()
@@ -62,7 +61,7 @@ class CoreDataService: CoreDataServiceProtocol {
     func getEntity(for model: RSSFeedItemModel) async -> RSSFeedEntity? {
         let fetchRequest: NSFetchRequest<RSSFeedEntity> = RSSFeedEntity.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "id == %@", model.id as CVarArg)
-
+        
         do {
             let entities = try context.fetch(fetchRequest)
             return entities.first
@@ -75,7 +74,7 @@ class CoreDataService: CoreDataServiceProtocol {
     func getEntity(for model: RSSChannelModel) async -> RSSChannelEntity? {
         let fetchRequest: NSFetchRequest<RSSChannelEntity> = RSSChannelEntity.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "id == %@", model.id as CVarArg)
-
+        
         do {
             let entities = try context.fetch(fetchRequest)
             return entities.first

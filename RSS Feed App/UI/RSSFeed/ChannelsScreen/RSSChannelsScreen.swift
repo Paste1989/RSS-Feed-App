@@ -44,18 +44,9 @@ struct RSSChannelsScreen: View {
                     case .error(let type):
                         switch type {
                         case .channel:
-                            if viewModel.checkInternetConnection() {
-                                Text(Localizable.error_enter_valid_url.localized)
-                                    .font(.bodySmall)
-                                    .foregroundColor(AppColors.error.color)
-                            }
-                            else {
-                                
-                                ZStack{}
-                                    .onAppear {
-                                        isShown = true
-                                    }
-                            }
+                            Text(Localizable.error_enter_valid_url.localized)
+                                .font(.bodySmall)
+                                .foregroundColor(AppColors.error.color)
                         case .feed:
                             ChannelDataView(viewModel: viewModel)
                         }
@@ -68,21 +59,18 @@ struct RSSChannelsScreen: View {
                             }
                             .tint(AppColors.dark.color)
                             .foregroundColor(AppColors.dark.color)
-                    
-                        
                     case .none:
                         EmptyView()
                     }
                     
                     Spacer()
                 }
-                
             }
             .overlay(
-                CustomModalView(modalType: .twoButtonsAlert, cancelButtonTitle: "Cancel", confirmButtonTitle: "OK", title: "Internet connection failed", message: "Please check your Internet connection.", cancelButtonShow: false, hasDescription: true, onConfirmButtonTapped: {
-                    isShown = false
+                CustomModalView(modalType: .twoButtonsAlert, cancelButtonTitle: Localizable.cancel_button_title.localized, confirmButtonTitle: Localizable.ok_button_title.localized, title: Localizable.internet_connection_failure_title.localized, message: Localizable.internet_connection_failure_description.localized, cancelButtonShow: false, hasDescription: true, onConfirmButtonTapped: {
+                    viewModel.isConnected = true
                 })
-                    .opacity(isShown ? 1 : 0)
+                .opacity(viewModel.isConnected ? 0 : 1)
             )
             .padding(.horizontal, 20)
         }
@@ -117,5 +105,5 @@ struct RSSChannelsScreen: View {
 }
 
 #Preview {
-    RSSChannelsScreen(viewModel: .init(persistenceService: ServiceFactory.persistenceService, rssService: ServiceFactory.rssService, connectivityService: ServiceFactory.connectivityService))
+    RSSChannelsScreen(viewModel: .init(persistenceService: ServiceFactory.persistenceService, rssService: ServiceFactory.rssService, connectivityService: ServiceFactory.connectivityService, channelsDataService: ServiceFactory.rssChannelsDataService))
 }

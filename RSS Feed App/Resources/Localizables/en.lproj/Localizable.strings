@@ -16,3 +16,8 @@
 "loading_state_title" = "Loading...";
 "rss_chanells_title" = "RSS Channels";
 "read_more_title" = "Read more...";
+"cancel_button_title" = "Cancel";
+"ok_button_title" = "OK";
+"internet_connection_failure_title" = "Internet connection failed";
+"internet_connection_failure_description" = "Please check your Internet connection.";
+"last_searched_description" = "Last items searched";

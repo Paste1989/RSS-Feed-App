@@ -8,23 +8,40 @@
 import Foundation
 import Network
 
+
 protocol ConnectivityProtocol {
     func checkInternetConnection() -> Bool
-    var isConnected: Bool { get set }
 }
 
 class ConnectivityService: ObservableObject, ConnectivityProtocol {
     private let monitor = NWPathMonitor()
     private let queue = DispatchQueue.global(qos: .background)
-    var isConnected: Bool = false
-    
-    func checkInternetConnection() -> Bool {
+    @Published var isConnected: Bool = false
+    @Published var connectionType: String = "Unknown"
+
+    init() {
         monitor.pathUpdateHandler = { [weak self] path in
             DispatchQueue.main.async {
                 self?.isConnected = path.status == .satisfied
+                
+                if path.usesInterfaceType(.wifi) {
+                    self?.connectionType = "Wi-Fi"
+                } else if path.usesInterfaceType(.cellular) {
+                    self?.connectionType = "Cellular"
+                } else if path.usesInterfaceType(.wiredEthernet) {
+                    self?.connectionType = "Wired Ethernet"
+                } else if path.usesInterfaceType(.other) {
+                    self?.connectionType = "Other"
+                } else {
+                    self?.connectionType = "No Connection"
+                    self?.isConnected = false
+                }
             }
         }
         monitor.start(queue: queue)
+    }
+
+    func checkInternetConnection() -> Bool {
         return isConnected
     }
 }

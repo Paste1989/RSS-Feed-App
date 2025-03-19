@@ -18,4 +18,9 @@ enum Localizable {
     static let loading_state_title = "loading_state_title"
     static let rss_chanells_title = "rss_chanells_title"
     static let read_more_title = "read_more_title"
+    static let cancel_button_title = "cancel_button_title"
+    static let ok_button_title = "ok_button_title"
+    static let internet_connection_failure_title = "internet_connection_failure_title"
+    static let internet_connection_failure_description = "internet_connection_failure_description"
+    static let last_searched_description = "last_searched_description"
 }

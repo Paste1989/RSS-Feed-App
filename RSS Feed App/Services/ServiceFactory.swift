@@ -28,7 +28,7 @@ struct ServiceFactory {
         return RSSParserService()
     }
     
-    static var rssChannelService: RSSChannelDataServiceProtocol {
+    static var rssChannelsDataService: RSSChannelDataServiceProtocol {
         return RSSChannelDataService()
     }
     

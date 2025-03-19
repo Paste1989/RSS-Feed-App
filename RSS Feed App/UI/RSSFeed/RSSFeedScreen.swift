@@ -43,7 +43,6 @@ struct RSSFeedScreen: View {
                 HStack(spacing: 0) {
                     if !viewModel.channels.isEmpty {
                         Button {
-                            print("remove tapped")
                             Task {
                                 await viewModel.removeFeedItemsFromStorage()
                             }
@@ -70,19 +69,18 @@ struct RSSFeedScreen: View {
                                     viewModel.fetchFeed(for: channel)
                                     inputText = channel.link
                                 }
-                                
-                                //.padding(20)
                             }
                             .padding(.horizontal, 5)
                         }
                     }
                 }
+                .opacity(viewModel.rssFeedItems.isEmpty ? 0 : 1)
                 .padding(.horizontal, 10)
                 .padding(.bottom, 15)
                 
                 ScrollView(showsIndicators: false) {
                     VStack(spacing: 0) {
-                        Text(viewModel.channelTitle)
+                        Text(viewModel.currentChannel?.name ?? "")
                             .foregroundColor(AppColors.dark.color)
                             .font(.bodyXLarge)
                             .padding(.vertical, 20)
@@ -102,14 +100,12 @@ struct RSSFeedScreen: View {
                                                         .frame(width: 60, height: 60)
                                                         .foregroundColor(AppColors.disabled.color)
                                                         .clipShape(RoundedRectangle(cornerRadius: 10))
-                                                    
                                                 case .success(let image):
                                                     image
                                                         .resizable()
                                                         .scaledToFill()
                                                         .frame(width: 60, height: 50)
                                                         .clipShape(RoundedRectangle(cornerRadius: 10))
-                                                    
                                                 case .failure:
                                                     Image(AppImages.no_image_placeholder_img.image)
                                                         .resizable()
@@ -117,7 +113,6 @@ struct RSSFeedScreen: View {
                                                         .frame(width: 60, height: 60)
                                                         .foregroundColor(AppColors.disabled.color)
                                                         .clipShape(RoundedRectangle(cornerRadius: 10))
-                                                    
                                                 @unknown default:
                                                     ProgressView()
                                                         .frame(width: 60, height: 60)
@@ -126,7 +121,6 @@ struct RSSFeedScreen: View {
                                                 }
                                             }
                                             .padding(.horizontal, 15)
-                                            
                                             
                                             VStack(alignment: .leading, spacing: 5) {
                                                 Text(feedItem.title)
@@ -151,7 +145,7 @@ struct RSSFeedScreen: View {
                                         }
                                     }
                                     .onTapGesture {
-                                        print("tapped...")
+                                        print("Item tapped...") //TODO:  create in-app web view and call it
                                     }
                                     .padding(.vertical, 10)
                                     
@@ -159,17 +153,9 @@ struct RSSFeedScreen: View {
                                 }
                             }
                         case .error:
-                            if viewModel.checkInternetConnection() {
-                                Text(Localizable.error_enter_valid_url.localized)
-                                    .font(.bodySmall)
-                                    .foregroundColor(AppColors.error.color)
-                            }
-                            else {
-                                Text("No internet connection")
-                                    .onAppear {
-                                        isShown = true
-                                    }
-                            }
+                            Text(Localizable.error_enter_valid_url.localized)
+                                .font(.bodySmall)
+                                .foregroundColor(AppColors.error.color)
                         default:
                             EmptyView()
                             
@@ -180,14 +166,14 @@ struct RSSFeedScreen: View {
             }
             .padding(.horizontal, 10)
             .overlay(
-                CustomModalView(modalType: .twoButtonsAlert, cancelButtonTitle: "Cancel", confirmButtonTitle: "OK", title: "Internet connection failed", message: "Please check your Internet connection.", cancelButtonShow: false, hasDescription: true, onConfirmButtonTapped: { [weak viewModel] in
-                    isShown = false
+                CustomModalView(modalType: .oneButtonAlert, cancelButtonTitle: Localizable.cancel_button_title.localized, confirmButtonTitle: Localizable.ok_button_title.localized, title: Localizable.internet_connection_failure_title.localized, message: Localizable.internet_connection_failure_description.localized, cancelButtonShow: false, hasDescription: true, onConfirmButtonTapped: {
+                    viewModel.isConnected = true
                 })
-                .opacity(isShown ? 1 : 0)
+                .opacity(viewModel.isConnected ? 0 : 1)
             )
             .sheet(isPresented: $rssChanelsScreenShown, onDismiss: {
                 rssChanelsScreenShown = false
-                inputText = viewModel.channelURL
+                inputText = viewModel.currentChannel?.link ?? ""
             }) {
                 RSSChannelsScreen(viewModel: viewModel)
             }
@@ -200,7 +186,6 @@ struct RSSFeedScreen: View {
             }
             .navigationBarItems(trailing: HStack {
                 Button(action: {
-                    print("channels tapped")
                     rssChanelsScreenShown.toggle()
                 }) {
                     Text(Localizable.channels_btn_title.localized)
@@ -215,7 +200,6 @@ struct RSSFeedScreen: View {
                 if !viewModel.isInitalDataFetched() {
                     viewModel.fetchRSSChannels()
                 }
-                
             }
         }
     }

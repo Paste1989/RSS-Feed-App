@@ -143,7 +143,7 @@ extension RSSService {
     
     func removeFeedItemsFromStorage() async {
         let rssFeedItems = rssFeedDataService.fetchRSSFeedItems()
-        
+
         for item in rssFeedItems {
             if let entity = await rssFeedDataService.getEntity(item: item) {
                 rssFeedDataService.deleteRSSFeedItem(item: entity)

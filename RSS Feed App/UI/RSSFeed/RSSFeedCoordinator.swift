@@ -17,7 +17,7 @@ class RSSFeedCoordinator: Coordinator {
     }
     
     private func createHomeScreen() -> UIViewController {
-        let vm = RSSFeedViewModel(persistenceService: ServiceFactory.persistenceService, rssService: ServiceFactory.rssService, connectivityService: ServiceFactory.connectivityService)
+        let vm = RSSFeedViewModel(persistenceService: ServiceFactory.persistenceService, rssService: ServiceFactory.rssService, connectivityService: ServiceFactory.connectivityService, channelsDataService: ServiceFactory.rssChannelsDataService)
         let vc = UIHostingController(rootView: RSSFeedScreen(viewModel: vm))
         vc.setupTab(title: Localizable.home_tab_title.localized, image: "newspaper", selectedImage: "newspaper.fill")
         navigationController.pushViewController(vc, animated: false)

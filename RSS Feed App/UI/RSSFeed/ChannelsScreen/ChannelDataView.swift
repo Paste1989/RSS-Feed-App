@@ -67,10 +67,9 @@ struct ChannelDataView: View {
                 }
             }
         }
-        
     }
 }
 
 #Preview {
-    ChannelDataView(viewModel: .init(persistenceService: ServiceFactory.persistenceService, rssService: ServiceFactory.rssService, connectivityService: ServiceFactory.connectivityService))
+    ChannelDataView(viewModel: .init(persistenceService: ServiceFactory.persistenceService, rssService: ServiceFactory.rssService, connectivityService: ServiceFactory.connectivityService, channelsDataService: ServiceFactory.rssChannelsDataService))
 }
