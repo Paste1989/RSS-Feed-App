@@ -17,6 +17,7 @@ enum Localizable {
     static let enter_url_placeholder = "enter_url_placeholder"
     static let loading_state_title = "loading_state_title"
     static let rss_chanells_title = "rss_chanells_title"
+    static let feed_items_title = "feed_items_title"
     static let read_more_title = "read_more_title"
     static let cancel_button_title = "cancel_button_title"
     static let ok_button_title = "ok_button_title"

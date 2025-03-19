@@ -10,6 +10,7 @@ import SwiftUI
 struct FavoriteCellView: View {
     var data: RSSChannelModel
     var onFavoriteTapped: (() -> Void)?
+    var onItemTapped: ((RSSChannelModel) -> Void)?
     
     var body: some View {
         ZStack {
@@ -72,6 +73,9 @@ struct FavoriteCellView: View {
         .frame(height: 100)
         .cornerRadius(10)
         .padding(.horizontal, 10)
+        .onTapGesture {
+            onItemTapped?(data)
+        }
     }
 }
 

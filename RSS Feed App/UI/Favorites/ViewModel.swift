@@ -15,9 +15,7 @@ class FavoritesViewModel: ObservableObject {
         self.favoriteService = favoriteService
     }
     @Published var favoritesData: [RSSChannelModel] = []
-    
-    var onShouldShowDetails: ((RSSChannelModel) -> Void)?
-    var onTapped: (() -> Void)?
+    var onChannelTapped: ((RSSChannelModel) -> Void)?
     
     func getAllFavoriteChannels() -> [RSSChannelModel] {
         return persistenceService.favorites.reversed()

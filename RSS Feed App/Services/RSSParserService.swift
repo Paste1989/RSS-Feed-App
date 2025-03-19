@@ -108,7 +108,6 @@ extension RSSParserService {
             case "link":
                 currentLink += trimmedString
             case "image":
-                print("aaaa: \(trimmedString)")
                 currentImage = trimmedString
             case "description":
                 currentDescription += trimmedString

@@ -15,6 +15,7 @@
 "enter_url_placeholder" = "Unesite URL";
 "loading_state_title" = "Učitavanje...";
 "rss_chanells_title" = "RSS Kanali";
+"feed_items_title" = "RSS Članci";
 "read_more_title" = "Opširnije...";
 "cancel_button_title" = "Poništi";
 "ok_button_title" = "OK";

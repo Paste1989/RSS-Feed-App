@@ -35,6 +35,7 @@ struct RSSChannelsScreen: View {
                     Text(Localizable.rss_chanells_title.localized)
                         .font(.heading2)
                         .foregroundColor(AppColors.dark.color)
+                        .padding(.bottom, 25)
                     
                     Spacer()
                     

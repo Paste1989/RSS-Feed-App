@@ -15,6 +15,7 @@
 "enter_url_placeholder" = "Enter URL";
 "loading_state_title" = "Loading...";
 "rss_chanells_title" = "RSS Channels";
+"feed_items_title" = "RSS Feed";
 "read_more_title" = "Read more...";
 "cancel_button_title" = "Cancel";
 "ok_button_title" = "OK";
