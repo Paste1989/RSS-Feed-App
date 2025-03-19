@@ -13,7 +13,7 @@ struct RSSChannelsScreen: View {
     @State var isShown: Bool = false
     
     var body: some View {
-        ZStack{
+        ZStack {
             AppColors.white.color.edgesIgnoringSafeArea(.all)
             
             VStack(spacing: 0) {
@@ -105,5 +105,5 @@ struct RSSChannelsScreen: View {
 }
 
 #Preview {
-    RSSChannelsScreen(viewModel: .init(persistenceService: ServiceFactory.persistenceService, rssService: ServiceFactory.rssService, connectivityService: ServiceFactory.connectivityService, channelsDataService: ServiceFactory.rssChannelsDataService))
+    RSSChannelsScreen(viewModel: .init(persistenceService: ServiceFactory.persistenceService, rssService: ServiceFactory.rssService, connectivityService: ServiceFactory.connectivityService, channelsDataService: ServiceFactory.rssChannelsDataService, favoriteService: ServiceFactory.favoriteService))
 }

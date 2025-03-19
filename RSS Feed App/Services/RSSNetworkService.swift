@@ -12,7 +12,7 @@ enum ParseError: String {
     case invalidURL = "Invalid URL"
 }
 
-protocol RSSServiceProtocol {
+protocol RSSNNetworkServiceProtocol {
     func fetchRSSChannels() async throws
     func fetchRSSFeed(url: String) async throws -> [RSSFeedItemModel]
     func saveChannelsToStorage()
@@ -23,7 +23,7 @@ protocol RSSServiceProtocol {
     func removeFeedItemsFromStorage() async
 }
 
-class RSSService: NSObject, RSSServiceProtocol, XMLParserDelegate {
+class RSSNetworkService: NSObject, RSSNNetworkServiceProtocol, XMLParserDelegate {
     private let channelsURL: String = "https://rss.feedspot.com/world_news_rss_feeds/"
     private let rssParserService = ServiceFactory.rssParserService
     private let rssChannelDataService = RSSChannelDataService()
@@ -38,7 +38,7 @@ class RSSService: NSObject, RSSServiceProtocol, XMLParserDelegate {
 }
 
 //MARK: - RSS Channels
-extension RSSService {
+extension RSSNetworkService {
     func fetchRSSChannels() async throws {
         guard let url = URL(string: channelsURL) else { throw URLError.init(.badURL) }
         
@@ -53,24 +53,34 @@ extension RSSService {
                 if let channelData = try? await fetchChannelData(from: link) {
                     let channelModel = RSSChannelModel(id: UUID(), name: channelData.name, image: channelData.image, link: link)
                     channels.append(channelModel)
-                    
                 }
             }
             saveChannelsToStorage()
-            print("CHANNELS COUN == \(channels.count)")
         }
         catch {
             print("Error fetching channels: \(error)")
+            throw URLError(.badServerResponse)
         }
+    }
+    
+    func fetchRSSFeed(url: String) async throws -> [RSSFeedItemModel] {
+        guard let feedURL = URL(string: url) else {
+            throw NSError(domain: ParseError.invalidURL.rawValue, code: 400, userInfo: nil)
+        }
+        let (data, _) = try await URLSession.shared.data(from: feedURL)
+        let parser = RSSParserService()
+        feedItems = try parser.parseFeed(from: data)
+        await saveFeedsToStorage()
+        
+        return feedItems
     }
     
     private func extractRSSLinks(from html: String) -> [String] {
         let pattern = #"https?://[^\s"]+\.(xml|rss)"#
         let regex = try? NSRegularExpression(pattern: pattern, options: .caseInsensitive)
-        
         let matches = regex?.matches(in: html, range: NSRange(html.startIndex..., in: html)) ?? []
-        
         var rssLinks: [String] = []
+        
         for match in matches {
             if let range = Range(match.range, in: html) {
                 let link = String(html[range])
@@ -91,25 +101,8 @@ extension RSSService {
     }
 }
 
-//MARK: - RSS Feed
-extension RSSService {
-    func fetchRSSFeed(url: String) async throws -> [RSSFeedItemModel] {
-        guard let feedURL = URL(string: url) else {
-            throw NSError(domain: ParseError.invalidURL.rawValue, code: 400, userInfo: nil)
-        }
-        
-        let (data, _) = try await URLSession.shared.data(from: feedURL)
-        let parser = RSSParserService()
-        
-        feedItems = try parser.parseFeed(from: data)
-        
-        await saveFeedsToStorage()
-        return feedItems
-    }
-}
-
 //MARK: - Core Data
-extension RSSService {
+extension RSSNetworkService {
     func saveChannelsToStorage() {
         for channelModel in channels {
             rssChannelDataService.saveRSSChannel(rssChannel: channelModel)
@@ -117,7 +110,6 @@ extension RSSService {
     }
     
     func getChannelsFromStorage() async throws -> [RSSChannelModel] {
-        print("channels from storage COUNT: \(rssChannelDataService.fetchRSSChannels().count)")
         return rssChannelDataService.fetchRSSChannels()
     }
     
@@ -137,7 +129,6 @@ extension RSSService {
     }
     
     func getFeedItemsFromStorage() async throws -> [RSSFeedItemModel] {
-        print("feeds from storage COUNT: \(rssFeedDataService.fetchRSSFeedItems().count)")
         return rssFeedDataService.fetchRSSFeedItems()
     }
     

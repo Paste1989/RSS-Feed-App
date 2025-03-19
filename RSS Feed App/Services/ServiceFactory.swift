@@ -20,8 +20,8 @@ struct ServiceFactory {
         return PersistenceService()
     }
     
-    static var rssService: RSSServiceProtocol {
-        return RSSService()
+    static var rssService: RSSNNetworkServiceProtocol {
+        return RSSNetworkService()
     }
     
     static var rssParserService: RSSParserServiceProtocol {
@@ -34,5 +34,9 @@ struct ServiceFactory {
     
     static var rssFeedDataServic: RSSFeedDataServiceProtocol {
         return RSSFeedDataService()
+    }
+    
+    static var favoriteService: FavoriteServiceProtocol {
+        return FavoriteService(persistenceService: Self.persistenceService)
     }
 }

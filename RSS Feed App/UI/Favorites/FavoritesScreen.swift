@@ -14,13 +14,35 @@ struct FavoritesScreen: View {
         ZStack {
             AppColors.lightGrey.color.edgesIgnoringSafeArea(.all)
             
-            Text(Localizable.favorites_tab_title.localized)
-                .foregroundColor(AppColors.dark.color)
-                .font(Font.heading2)
+            VStack(spacing: 0) {
+                Text(Localizable.favorites_tab_title.localized)
+                    .font(.heading2)
+                    .foregroundColor(AppColors.dark.color)
+                    .padding(.bottom, 25)
+                
+                if !viewModel.favoritesData.isEmpty {
+                    ScrollView(.vertical, showsIndicators: false) {
+                        LazyVStack {
+                            ForEach(viewModel.favoritesData.indices, id: \.self) { i in
+                                FavoriteCellView(data: viewModel.favoritesData[i], onFavoriteTapped: {
+                                    viewModel.favoriteTapped(data: viewModel.favoritesData[i], index: i)
+                                })
+                            }
+                        }
+                    }
+                }
+                else {
+                    EmptyView()
+                }
+            }
+        }
+        .onAppear {
+            viewModel.favoritesData = viewModel.getAllFavoriteChannels()
         }
     }
 }
 
 #Preview {
-    FavoritesScreen(viewModel: .init())
+    FavoritesScreen(viewModel: .init(persistenceService: ServiceFactory.persistenceService, favoriteService: ServiceFactory.favoriteService))
 }
+

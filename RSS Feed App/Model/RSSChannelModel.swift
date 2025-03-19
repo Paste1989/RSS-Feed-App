@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct RSSChannelModel: Identifiable, Equatable {
+struct RSSChannelModel: Identifiable, Equatable, Codable {
     let id: UUID
     var name: String
     let image: String?

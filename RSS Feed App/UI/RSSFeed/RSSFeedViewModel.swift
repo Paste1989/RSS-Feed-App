@@ -22,13 +22,15 @@ enum FetchState: Equatable {
 class RSSFeedViewModel: ObservableObject {
     private var persistenceService: PersistenceServiceProtocol
     private var connectivityService: ConnectivityProtocol
-    private var rssService: RSSServiceProtocol
+    private var rssService: RSSNNetworkServiceProtocol
     private let channelsDataService: RSSChannelDataServiceProtocol
-    init(persistenceService: PersistenceServiceProtocol , rssService: RSSServiceProtocol, connectivityService: ConnectivityProtocol, channelsDataService: RSSChannelDataServiceProtocol) {
+    private let favoriteService: FavoriteServiceProtocol
+    init(persistenceService: PersistenceServiceProtocol , rssService: RSSNNetworkServiceProtocol, connectivityService: ConnectivityProtocol, channelsDataService: RSSChannelDataServiceProtocol, favoriteService: FavoriteServiceProtocol) {
         self.persistenceService = persistenceService
         self.connectivityService = connectivityService
         self.rssService = rssService
         self.channelsDataService = channelsDataService
+        self.favoriteService = favoriteService
     }
     @Published var state: FetchState = .none
     @Published var currentChannel: RSSChannelModel?
@@ -37,6 +39,21 @@ class RSSFeedViewModel: ObservableObject {
     @Published var channels: [RSSChannelModel] = []
     @Published var isConnected: Bool = true
     
+    func checkInternetConnection() -> Bool {
+        return connectivityService.checkInternetConnection()
+    }
+    
+    func initalDataFetched() {
+        persistenceService.isInitalDataFetched = true
+    }
+    
+    func isInitalDataFetched() -> Bool {
+        persistenceService.isInitalDataFetched
+    }
+}
+
+//MARK: - Networking and Core Data
+extension RSSFeedViewModel {
     func fetchRSSChannels() {
         print("channels fetching strated...")
         if isConnected == checkInternetConnection() {
@@ -205,16 +222,20 @@ class RSSFeedViewModel: ObservableObject {
             self?.state = .none
         }
     }
-    
-    func checkInternetConnection() -> Bool {
-        return connectivityService.checkInternetConnection()
+}
+
+// MARK: - Favorites
+extension RSSFeedViewModel {
+    func getAllFavoriteChannels() -> [RSSChannelModel] {
+        favoriteService.getAllFavorites()
     }
     
-    func initalDataFetched() {
-        persistenceService.isInitalDataFetched = true
-    }
-    
-    func isInitalDataFetched() -> Bool {
-        persistenceService.isInitalDataFetched
+    func favoriteTapped(data: RSSChannelModel, index: Int) {
+        if !favoriteService.isFavorite(data: data) {
+            favoriteService.saveFavorites(channel: data)
+        }
+        else {
+            favoriteService.removeFavorites(channel: data, index: index)
+        }
     }
 }

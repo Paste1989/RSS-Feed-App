@@ -130,7 +130,5 @@ extension RSSParserService {
             items.append(item)
         }
     }
-    
-    
 }
 
