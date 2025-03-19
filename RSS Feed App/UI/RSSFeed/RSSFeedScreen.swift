@@ -123,15 +123,23 @@ struct RSSFeedScreen: View {
                         .foregroundColor(AppColors.dark.color)
                 }
             }
-            .navigationBarItems(trailing: HStack {
-                Button(action: {
-                    rssChanelsScreenShown.toggle()
-                }) {
-                    Text(Localizable.channels_btn_title.localized)
-                        .foregroundColor(AppColors.dark.color)
-                        .font(.bodyMedium)
+            .navigationBarItems(
+                leading: Image(AppImages.logo_img.image)
+                    .resizable()
+                    .renderingMode(.template)
+                    .foregroundColor(AppColors.primary.color)
+                    .frame(width: 44, height: 44),
+                
+                trailing: HStack {
+                    Button(action: {
+                        rssChanelsScreenShown.toggle()
+                    }) {
+                        Text(Localizable.channels_btn_title.localized)
+                            .foregroundColor(AppColors.dark.color)
+                            .font(.bodyMedium)
+                    }
                 }
-            })
+            )
             .task {
                 viewModel.getChannelsfromStorage()
                 viewModel.getFeedItemsfromStorage()

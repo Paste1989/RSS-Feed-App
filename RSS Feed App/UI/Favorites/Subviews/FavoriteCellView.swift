@@ -34,13 +34,15 @@ struct FavoriteCellView: View {
                     .frame(width: 150, height: 95)
                     .aspectRatio(contentMode: .fill)
                     
-                    VStack(spacing: 0) {
+                    VStack(alignment: .leading, spacing: 0) {
                         Text(data.name)
+                            .multilineTextAlignment(.leading)
                             .font(.bodyLarge)
                             .foregroundColor(AppColors.dark.color)
                             .padding(.bottom, 5)
                         
                         Text(data.link)
+                            .multilineTextAlignment(.leading)
                             .font(.bodySmall)
                             .foregroundColor(AppColors.darkGrey.color)
                     }

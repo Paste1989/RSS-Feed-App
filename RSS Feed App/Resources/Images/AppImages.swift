@@ -8,6 +8,7 @@
 import Foundation
 
 enum AppImages: String {
+    case logo_img = "logo_img"
     case no_image_placeholder_img = "no_image_placeholder_img"
 }
 

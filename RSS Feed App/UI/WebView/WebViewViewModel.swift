@@ -7,6 +7,6 @@
 
 import Foundation
 
-class DetailsViewModel: ObservableObject {
+class WebViewViewModel: ObservableObject {
     
 }

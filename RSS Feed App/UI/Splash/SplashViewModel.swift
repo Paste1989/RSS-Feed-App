@@ -10,8 +10,10 @@ import Foundation
 class SplashViewModel: ObservableObject {
     var onSplashFinished: (() -> Void)?
     
+    //TODO: GET data while Splash is showing
+    
     func startSplash() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
             self?.onSplashFinished?()
         }
     }

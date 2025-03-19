@@ -16,46 +16,49 @@ struct FavoritesScreen: View {
             
             //TODO: - Horzontal scroll (pager) for channels and feeds
             
-            VStack(spacing: 15) {
+            VStack(spacing: 0) {
                 Text(Localizable.favorites_tab_title.localized)
+                    .multilineTextAlignment(.center)
                     .font(.heading2)
                     .foregroundColor(AppColors.dark.color)
                     .padding(.bottom, 25)
                 
-                Section {
-                    Text(Localizable.channels_btn_title.localized)
-                        .font(.bodyMedium)
-                        .foregroundColor(AppColors.dark.color)
-                        .padding(.bottom, 10)
-                    
-                    if !viewModel.favoritesData.isEmpty {
-                        ScrollView(.vertical, showsIndicators: false) {
-                            LazyVStack {
-                                ForEach(viewModel.favoritesData.indices, id: \.self) { i in
-                                    FavoriteCellView(data: viewModel.favoritesData[i], onFavoriteTapped: {
-                                        viewModel.favoriteTapped(data: viewModel.favoritesData[i], index: i)
-                                    }) { channel in
-                                        print("favorite channel tapped... \(channel.name)")
+                VStack(alignment: .leading, spacing: 15) {
+                    Section {
+                        Text(Localizable.channels_btn_title.localized)
+                            .font(.bodyMedium)
+                            .foregroundColor(AppColors.dark.color)
+                            .padding(.leading, 15)
+                        
+                        if !viewModel.favoritesData.isEmpty {
+                            ScrollView(.vertical, showsIndicators: false) {
+                                LazyVStack {
+                                    ForEach(viewModel.favoritesData.indices, id: \.self) { i in
+                                        FavoriteCellView(data: viewModel.favoritesData[i], onFavoriteTapped: {
+                                            viewModel.favoriteTapped(data: viewModel.favoritesData[i], index: i)
+                                        }) { channel in
+                                            print("favorite channel tapped... \(channel.name)")
+                                        }
                                     }
                                 }
                             }
                         }
+                        else {
+                            EmptyView()
+                        }
                     }
-                    else {
-                        EmptyView()
-                    }
-                }
-                
-                Section {
-                    Text(Localizable.feed_items_title.localized)
-                        .font(.bodyMedium)
-                        .foregroundColor(AppColors.dark.color)
-                        .padding(.bottom, 10)
                     
-                    //TODO: - Create feed items - Favorites
-                
+                    Section {
+                        Text(Localizable.feed_items_title.localized)
+                            .font(.bodyMedium)
+                            .foregroundColor(AppColors.dark.color)
+                            .padding(.leading, 15)
+                        
+                        //TODO: - Create feed items - Favorites
+                        
+                    }
+                    Spacer()
                 }
-                Spacer()
             }
         }
         .onAppear {

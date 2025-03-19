@@ -14,35 +14,29 @@ protocol Coordinator {
 }
 
 final class RootCoordinator: Coordinator {
-    private let navigationController: UINavigationController = UINavigationController()
-    var tabbarController = UITabBarController()
-    var childCoordinators = [Coordinator]()
+    private var childCoordinator: Coordinator?
+    private var navigationController: UINavigationController = UINavigationController()
     
     func start() -> UIViewController {
-        return startTabBarController()
+        return createSplashViewController()
     }
-    
-    private func startTabBarController() -> UIViewController {
-        let vc = createTabbarController()
+   
+    private func createSplashViewController() -> UIViewController {
+        let vm = SplashViewModel()
+            vm.startSplash()
+            vm.onSplashFinished = { [weak self] in
+                _ = self?.createTabbarViewController()
+            }
+        let vc = UIHostingController(rootView: SplashScreen(viewModel: vm))
+        navigationController.pushViewController(vc, animated: false)
         return vc
     }
     
-    private func createTabbarController() -> UIViewController {
-        let homeCoordinator = RSSFeedCoordinator()
-        let favoritesCoordinator = FavoritesCoordinator()
-        
-        childCoordinators = [
-            homeCoordinator,
-            favoritesCoordinator
-        ]
-        
-        tabbarController.tabBar.tintColor = UIColor(AppColors.darkGrey.color)
-        tabbarController.tabBar.backgroundColor = UIColor(AppColors.white.color)
-        tabbarController.tabBar.unselectedItemTintColor = UIColor(AppColors.disabled.color)
-        tabbarController.viewControllers = childCoordinators.map { coordinator in
-            return coordinator.start()
-        }
- 
+    private func createTabbarViewController() -> UIViewController {
+        let tabbarCoordinator = TabbarCoordinator()
+        childCoordinator = tabbarCoordinator
+        let tabbarController = tabbarCoordinator.start()
+        UIApplication.shared.currentKeyWindow?.rootViewController = tabbarController
         return tabbarController
     }
 }

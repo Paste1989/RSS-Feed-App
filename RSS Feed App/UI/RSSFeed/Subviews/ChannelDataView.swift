@@ -106,6 +106,10 @@ struct ChannelCellView: View {
                         .foregroundColor(AppColors.dark.color)
                         .padding(7)
                         .background(AppColors.lightGrey.color)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(AppColors.dark.color, lineWidth: 2)
+                        )
                         .clipShape(RoundedRectangle(cornerRadius: 10))
                         .offset(x: -10, y: -10)
                 }

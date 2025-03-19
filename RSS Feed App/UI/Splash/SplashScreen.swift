@@ -10,7 +10,22 @@ import SwiftUI
 struct SplashScreen: View {
     @ObservedObject var viewModel: SplashViewModel
     var body: some View {
-        Text("Splash")
+        ZStack {
+            AppColors.white.color.edgesIgnoringSafeArea(.all)
+            
+            VStack(spacing: 0) {
+                Text("RSS Feed App")
+                    .font(.heading2)
+                    .foregroundColor(AppColors.dark.color)
+                    .padding(.bottom, 20)
+                
+                Image(AppImages.logo_img.image)
+                    .resizable()
+                    .renderingMode(.template)
+                    .foregroundColor(AppColors.primary.color)
+                    .frame(width: 200, height: 200)
+            }
+        }
     }
 }
 
