@@ -84,6 +84,10 @@ class RSSFeedViewModel: ObservableObject {
         }
     }
     
+    func removeChannels() async {
+        await rssService.removeChannelsFromStorage()
+    }
+    
     func fetchFeed(for channel: RSSChannelModel) {
         DispatchQueue.main.async { [weak self] in
             self?.state = .loading(type: .feed)
@@ -157,6 +161,14 @@ class RSSFeedViewModel: ObservableObject {
                 print("Error getting feed from storage: \(error)")
             }
         }
+    }
+    
+    func reloadChannels() async {
+        DispatchQueue.main.async { [weak self] in
+            self?.state = .loading(type: .channel)
+        }
+        await removeChannels()
+        fetchRSSChannels()
     }
     
     

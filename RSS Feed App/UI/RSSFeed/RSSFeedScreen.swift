@@ -57,9 +57,6 @@ struct RSSFeedScreen: View {
                     
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 0) {
-                            
-                            //.padding(.vertical, 20)
-                            
                             ForEach(viewModel.channels) { channel in
                                 VStack(spacing: 0) {
                                     Text(channel.name)
@@ -213,37 +210,14 @@ struct RSSFeedScreen: View {
             })
             .task {
                 viewModel.getChannelsfromStorage()
+                viewModel.getFeedItemsfromStorage()
+                
                 if !viewModel.isInitalDataFetched() {
                     viewModel.fetchRSSChannels()
                 }
                 
-                viewModel.getFeedItemsfromStorage()
             }
         }
     }
 }
 
-
-struct PlaceholderModifier: ViewModifier {
-    var placeholder: String
-    var isShowing: Bool
-    var placeholderColor: Color
-
-    func body(content: Content) -> some View {
-        ZStack(alignment: .leading) {
-            content
-            if isShowing {
-                Text(placeholder)
-                    .foregroundColor(placeholderColor)
-                    .padding(.leading, 5)
-                    .padding(.top, 8)
-            }
-        }
-    }
-}
-
-extension View {
-    func placeholder(when shouldShow: Bool, _ placeholder: String, color: Color = .gray) -> some View {
-        self.modifier(PlaceholderModifier(placeholder: placeholder, isShowing: shouldShow, placeholderColor: color))
-    }
-}

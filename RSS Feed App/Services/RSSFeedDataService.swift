@@ -18,23 +18,23 @@ class RSSFeedDataService: RSSFeedDataServiceProtocol {
     private let context = CoreDataService().context
     
     func saveRSSFeedItem(item: RSSFeedItemModel) {
-        let feedItemEntity = coreDataService.createEntity(ofType: RSSFeedEntity.self, context: context)
+        let feedItemEntity = coreDataService.createEntity(ofType: RSSFeedEntity.self)
         feedItemEntity.id = item.id
         feedItemEntity.title = item.title
         feedItemEntity.feedDescription = item.description
         feedItemEntity.image = item.image
         feedItemEntity.link = item.link
         
-        coreDataService.saveContext(context: context)
+        coreDataService.saveContext()
     }
     
     func fetchRSSFeedItems() -> [RSSFeedItemModel] {
-        let feedEntities: [RSSFeedEntity] = coreDataService.fetchEntities(ofType: RSSFeedEntity.self, context: context)
+        let feedEntities: [RSSFeedEntity] = coreDataService.fetchEntities(ofType: RSSFeedEntity.self)
         return feedEntities.map { RSSFeedItemModel(id: $0.id ?? UUID(), title: $0.title ?? "", description: $0.feedDescription ?? "", image: $0.image, link: $0.link ?? "") }
     }
     
     func deleteRSSFeedItem(item: RSSFeedEntity) {
-        coreDataService.deleteEntity(entity: item, context: context)
+        coreDataService.deleteEntity(item)
     }
     
     func getEntity(item: RSSFeedItemModel) async -> RSSFeedEntity? {

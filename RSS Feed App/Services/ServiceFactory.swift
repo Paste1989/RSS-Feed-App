@@ -12,7 +12,7 @@ struct ServiceFactory {
         return ConnectivityService()
     }
     
-    static var coreDataService: CoredataServiceProtocol {
+    static var coreDataService: CoreDataServiceProtocol {
         return CoreDataService()
     }
     

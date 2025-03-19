@@ -28,6 +28,7 @@ struct RSSChannelsScreen: View {
                             .foregroundColor(AppColors.dark.color)
                             .frame(width: 40, height: 40)
                     }
+                    .padding(.top, 10)
                 }
                 
                 VStack(spacing: 0) {
@@ -75,84 +76,46 @@ struct RSSChannelsScreen: View {
                     
                     Spacer()
                 }
+                
             }
             .overlay(
-                CustomModalView(modalType: .twoButtonsAlert, cancelButtonTitle: "Cancel", confirmButtonTitle: "OK", title: "Internet connection failed", message: "Please check your Internet connection.", cancelButtonShow: false, hasDescription: true, onConfirmButtonTapped: { [weak viewModel] in
+                CustomModalView(modalType: .twoButtonsAlert, cancelButtonTitle: "Cancel", confirmButtonTitle: "OK", title: "Internet connection failed", message: "Please check your Internet connection.", cancelButtonShow: false, hasDescription: true, onConfirmButtonTapped: {
                     isShown = false
                 })
                     .opacity(isShown ? 1 : 0)
             )
             .padding(.horizontal, 20)
         }
+        .overlay(
+            ZStack(alignment: .bottomTrailing) {
+                VStack(spacing: 0){
+                    Spacer()
+                    HStack(spacing: 0) {
+                        Spacer()
+                        Button(action: {
+                            Task {
+                                await viewModel.reloadChannels()
+                            }
+                        }) {
+                            VStack(spacing: 10) {
+                                Image(systemName: "arrow.down.doc")
+                                    .font(.bodyXLarge)
+                                    .foregroundColor(AppColors.dark.color)
+                                    .frame(width: 60, height: 60)
+                            }
+                            .background(AppColors.primary.color)
+                            .clipShape(Circle())
+                            .shadow(color: AppColors.darkGrey.color, radius: 10, y: 4)
+                        }
+                        .frame(width: 70, height: 70)
+                        .padding(25)
+                    }
+                }
+            }
+        )
     }
 }
 
 #Preview {
     RSSChannelsScreen(viewModel: .init(persistenceService: ServiceFactory.persistenceService, rssService: ServiceFactory.rssService, connectivityService: ServiceFactory.connectivityService))
-}
-
-
-
-struct ChannelDataView: View {
-    @Environment(\.presentationMode) var presentationMode
-    var viewModel: RSSFeedViewModel
-    init(viewModel: RSSFeedViewModel) {
-        self.viewModel = viewModel
-    }
-    var body: some View {
-        ScrollView(showsIndicators: false) {
-            LazyVStack(alignment: .leading, spacing: 10) {
-                ForEach(viewModel.rssChannels) { channel in
-                    
-                    ZStack(alignment: .bottomTrailing) {
-                        AsyncImage(url: URL(string: channel.image ?? "")) { phase in
-                            switch phase {
-                            case .empty:
-                                Image(AppImages.no_image_placeholder_img.image)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .foregroundColor(AppColors.disabled.color)
-                                
-                            case .success(let image):
-                                image
-                                    .resizable()
-                                    .scaledToFit()
-                                    .clipped()
-                                
-                            case .failure:
-                                Image(AppImages.no_image_placeholder_img.image)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .foregroundColor(AppColors.disabled.color)
-                                
-                            @unknown default:
-                                ProgressView()
-                                    .frame(height: 120)
-                                    .background(AppColors.disabled.color)
-                            }
-                        }
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        
-                        Text(channel.name)
-                            .frame(maxWidth: 200)
-                            .font(.bodyXLarge)
-                            .foregroundColor(AppColors.dark.color)
-                            .padding(7)
-                            .background(AppColors.lightGrey.color)
-                            .clipShape(RoundedRectangle(cornerRadius: 10))
-                            .offset(x: -10, y: -10)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .onTapGesture {
-                        viewModel.fetchFeed(for: channel)
-                        presentationMode.wrappedValue.dismiss()
-                    }
-                    .padding(.bottom, 5)
-                    
-                    Divider()
-                }
-            }
-        }
-        
-    }
 }

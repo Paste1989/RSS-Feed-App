@@ -15,7 +15,10 @@ enum ParseError: String {
 protocol RSSServiceProtocol {
     func fetchRSSChannels() async throws
     func fetchRSSFeed(url: String) async throws -> [RSSFeedItemModel]
+    func saveChannelsToStorage()
     func getChannelsFromStorage() async throws -> [RSSChannelModel]
+    func removeChannelsFromStorage() async
+    func saveFeedsToStorage() async
     func getFeedItemsFromStorage() async throws -> [RSSFeedItemModel]
     func removeFeedItemsFromStorage() async
 }
@@ -50,7 +53,7 @@ extension RSSService {
                 if let channelData = try? await fetchChannelData(from: link) {
                     let channelModel = RSSChannelModel(id: UUID(), name: channelData.name, image: channelData.image, link: link)
                     channels.append(channelModel)
-                
+                    
                 }
             }
             saveChannelsToStorage()
@@ -116,6 +119,15 @@ extension RSSService {
     func getChannelsFromStorage() async throws -> [RSSChannelModel] {
         print("channels from storage COUNT: \(rssChannelDataService.fetchRSSChannels().count)")
         return rssChannelDataService.fetchRSSChannels()
+    }
+    
+    func removeChannelsFromStorage() async {
+        let rssChannels = rssChannelDataService.fetchRSSChannels()
+        for channel in rssChannels {
+            if let entity = await rssChannelDataService.getEntity(channel: channel) {
+                rssChannelDataService.deleteRSSChannel(channel: entity)
+            }
+        }
     }
     
     func saveFeedsToStorage() async {

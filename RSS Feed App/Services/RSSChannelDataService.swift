@@ -19,21 +19,25 @@ class RSSChannelDataService: RSSChannelDataServiceProtocol {
     private let context = CoreDataService().context
 
     func saveRSSChannel(rssChannel: RSSChannelModel) {
-        let channelEntity = coreDataService.createEntity(ofType: RSSChannelEntity.self, context: context)
+        let channelEntity = coreDataService.createEntity(ofType: RSSChannelEntity.self)
         channelEntity.id = rssChannel.id
         channelEntity.name = rssChannel.name
         channelEntity.image = rssChannel.image
         channelEntity.link = rssChannel.link
         
-        coreDataService.saveContext(context: context)
+        coreDataService.saveContext()
     }
 
     func fetchRSSChannels() -> [RSSChannelModel] {
-        let channelEntities: [RSSChannelEntity] = coreDataService.fetchEntities(ofType: RSSChannelEntity.self, context: context)
+        let channelEntities: [RSSChannelEntity] = coreDataService.fetchEntities(ofType: RSSChannelEntity.self)
         return channelEntities.map { RSSChannelModel(id: $0.id ?? UUID(), name: $0.name ?? "", image: $0.image, link: $0.link ?? "") }
     }
 
     func deleteRSSChannel(channel: RSSChannelEntity) {
-        coreDataService.deleteEntity(entity: channel, context: context)
+        coreDataService.deleteEntity(channel)
+    }
+    
+    func getEntity(channel: RSSChannelModel) async -> RSSChannelEntity? {
+        return await coreDataService.getEntity(for: channel)
     }
 }
