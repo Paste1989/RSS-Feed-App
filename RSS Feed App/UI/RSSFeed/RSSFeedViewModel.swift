@@ -38,6 +38,7 @@ class RSSFeedViewModel: ObservableObject {
     @Published var rssChannels: [RSSChannelModel] = []
     @Published var channels: [RSSChannelModel] = []
     @Published var isConnected: Bool = true
+    var onFeedItemTapped: ((RSSFeedItemModel) -> Void)?
     
     func checkInternetConnection() -> Bool {
         return connectivityService.checkInternetConnection()
@@ -204,6 +205,7 @@ extension RSSFeedViewModel {
                 self?.state = .loading(type: .channel)
             }
             await removeChannels()
+            removeFavorites()
             fetchRSSChannels()
         }
         else {
@@ -212,7 +214,6 @@ extension RSSFeedViewModel {
             }
         }
     }
-    
     
     func removeFeedItemsFromStorage() async {
         await rssService.removeFeedItemsFromStorage()
@@ -237,5 +238,9 @@ extension RSSFeedViewModel {
         else {
             favoriteService.removeFavorites(channel: data, index: index)
         }
+    }
+    
+    func removeFavorites() {
+        favoriteService.removeAll()
     }
 }

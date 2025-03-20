@@ -89,6 +89,9 @@ struct RSSFeedScreen: View {
                             LazyVStack(alignment: .leading, spacing: 12) {
                                 ForEach(viewModel.rssFeedItems) { feedItem in
                                     RSSFeedCellView(feedItem: feedItem)
+                                        .onTapGesture {
+                                            viewModel.onFeedItemTapped?(feedItem)
+                                        }
                                 }
                             }
                         case .error:

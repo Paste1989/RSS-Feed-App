@@ -12,6 +12,7 @@ protocol FavoriteServiceProtocol {
     func saveFavorites(channel: RSSChannelModel)
     func removeFavorites(channel: RSSChannelModel, index: Int)
     func isFavorite(data: RSSChannelModel) -> Bool
+    func removeAll()
 }
 
 final class FavoriteService: FavoriteServiceProtocol {
@@ -41,5 +42,9 @@ final class FavoriteService: FavoriteServiceProtocol {
     
     func isFavorite(data: RSSChannelModel) -> Bool {
         return persistenceService.favorites.contains(data)
+    }
+    
+    func removeAll() {
+        persistenceService.favorites.removeAll()
     }
 }
