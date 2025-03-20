@@ -1,0 +1,24 @@
+/* 
+  Localizable.strings
+  RSS Feed App
+
+  Created by Saša Brezovac on 11.03.2025..
+  
+*/
+
+"app_name" = "RSS Feed App";
+"home_tab_title" = "Feed";
+"favorites_tab_title" = "Favorites";
+"news_title" = "News";
+"channels_btn_title" = "Channels";
+"error_enter_valid_url" = "Please enter valid URL.";
+"enter_url_placeholder" = "Enter URL";
+"loading_state_title" = "Loading...";
+"rss_chanells_title" = "RSS Channels";
+"feed_items_title" = "RSS Feed";
+"read_more_title" = "Read more...";
+"cancel_button_title" = "Cancel";
+"ok_button_title" = "OK";
+"internet_connection_failure_title" = "Internet connection failed";
+"internet_connection_failure_description" = "Please check your Internet connection.";
+"last_searched_description" = "Last items searched";

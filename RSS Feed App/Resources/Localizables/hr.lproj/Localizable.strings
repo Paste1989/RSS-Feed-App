@@ -1,0 +1,24 @@
+/* 
+  Localizable.strings
+  RSS Feed App
+
+  Created by Saša Brezovac on 11.03.2025..
+  
+*/
+
+"app_name" = "RSS Feed App";
+"home_tab_title" = "Novosti";
+"favorites_tab_title" = "Favoriti";
+"news_title" = "Novosti";
+"channels_btn_title" = "Kanali";
+"error_enter_valid_url" = "Molim upišite validan URL.";
+"enter_url_placeholder" = "Unesite URL";
+"loading_state_title" = "Učitavanje...";
+"rss_chanells_title" = "RSS Kanali";
+"feed_items_title" = "RSS Članci";
+"read_more_title" = "Opširnije...";
+"cancel_button_title" = "Poništi";
+"ok_button_title" = "OK";
+"internet_connection_failure_title" = "Greška s internet konekcijom";
+"internet_connection_failure_description" = "Molim provjerite vašu internet konekciju.";
+"last_searched_description" = "Posljednje pretraživano";
